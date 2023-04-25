@@ -128,7 +128,7 @@ a8e32ff6-6140-4a19-84a5-c157820fc376
 
 ## Sample script
 
-Sample bash script for testing purposes is provided in [sample/test.sh] file.
+Sample bash script for testing purposes is provided in [sample/test.sh](sample/test.sh) file.
 
 ## TODO
 
