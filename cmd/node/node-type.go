@@ -11,6 +11,9 @@ import (
 
 const nodeUrlPath string = "/api/-default-/public/alfresco/versions/1/nodes/"
 
+const TypeFolder string = "cm:folder"
+const TypeContent string = "cm:content"
+
 type Node struct {
 	Entry struct {
 		AspectNames   []string

@@ -55,11 +55,12 @@ Usage:
   alfresco node [command]
 
 Available Commands:
-  create      Create new Node
-  delete      Delete Node
-  get         Get Node information
-  list        Get children nodes
-  update      Update Node information
+  create        Create new Node
+  delete        Delete Node
+  get           Get Node information
+  list          Get children nodes
+  update        Update Node information
+  upload-folder Upload local folder to Alfresco Repository
 
 Flags:
   -i, --nodeId string   Node Id in Alfresco Repository
@@ -132,6 +133,7 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
+* Pagination
 * TLS protocol support
 * Site commands
 * Person commands

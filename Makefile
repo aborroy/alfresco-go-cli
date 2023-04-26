@@ -2,8 +2,7 @@ EXECUTABLE=alfresco
 WINDOWS=$(EXECUTABLE)_windows_amd64.exe
 LINUX=$(EXECUTABLE)_linux_amd64
 DARWIN=$(EXECUTABLE)_darwin_arm64
-VERSION=1
-# VERSION=$(shell git describe --tags --always --long --dirty)
+VERSION=$(shell git describe --tags --always --long --dirty)
 
 all: build
 

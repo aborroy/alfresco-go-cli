@@ -11,12 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ./alfresco node update -i 728e1006-a77a-459f-bec3-158709527090
-// -n sample-document.docx
-// -t cm:content
-// -p cm:title="Title New" -p cm:description="Description New"
-// -a rn:renditioned -a cm:versionable -a cm:titled -a cm:auditable -a cm:author
-
 var nodeName string
 var nodeType string
 var aspects []string
