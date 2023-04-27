@@ -16,39 +16,39 @@ const TypeContent string = "cm:content"
 
 type Node struct {
 	Entry struct {
-		AspectNames   []string
-		CreatedAt     string
-		IsFolder      bool
-		IsFile        bool
+		AspectNames   []string `json:"aspectNames"`
+		CreatedAt     string   `json:"createdAt"`
+		IsFolder      bool     `json:"isFolder"`
+		IsFile        bool     `json:"isFile"`
 		CreatedByUser struct {
-			ID          string
-			DisplayName string
-		}
-		ModifiedAt     string
+			ID          string `json:"id"`
+			DisplayName string `json:"displayName"`
+		} `json:"createdByUser"`
+		ModifiedAt     string `json:"modifiedAt"`
 		ModifiedByUser struct {
-			ID          string
-			DisplayName string
-		}
-		Name       string
-		ID         string
-		NodeType   string
-		Properties map[string](string)
-	}
+			ID          string `json:"id"`
+			DisplayName string `json:"displayName"`
+		} `json:"modifiedByUser"`
+		Name       string              `json:"name"`
+		ID         string              `json:"id"`
+		NodeType   string              `json:"nodeType"`
+		Properties map[string](string) `json:"properties"`
+	} `json:"entry"`
 }
 
 type NodeList struct {
 	List struct {
 		Pagination struct {
-			Count        int
-			HasMoreItems bool
-			TotalItems   int
-			SkipCount    int
-			MaxItems     int
-		}
+			Count        int  `json:"count"`
+			HasMoreItems bool `json:"hasMoreItems"`
+			TotalItems   int  `json:"totalItems"`
+			SkipCount    int  `json:"skipCount"`
+			MaxItems     int  `json:"maxItems"`
+		} `json:"pagination"`
 		Entries []struct {
 			Node
-		}
-	}
+		} `json:"entries"`
+	} `json:"list"`
 }
 
 type NodeUpdate struct {
@@ -92,11 +92,21 @@ func outputNodeList(data []byte, format string) {
 		}
 	case string(cmd.Default):
 		json.Unmarshal(data, &nodeList)
-		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+		w := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 		fmt.Fprintln(w, "ID\tNAME\tMODIFIED AT\tUSER\t")
 		for _, node := range nodeList.List.Entries {
 			fmt.Fprintln(w, node.Entry.ID+"\t"+node.Entry.Name+"\t"+node.Entry.ModifiedAt+"\t"+node.Entry.ModifiedByUser.ID)
 		}
+		w.Flush()
+		w = tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
+		fmt.Fprintln(w, "COUNT\tMORE\tTOTAL\tSKIP\tMAX")
+		pagination := fmt.Sprintf("%d\t%t\t%d\t%d\t%d",
+			nodeList.List.Pagination.Count,
+			nodeList.List.Pagination.HasMoreItems,
+			nodeList.List.Pagination.TotalItems,
+			nodeList.List.Pagination.SkipCount,
+			nodeList.List.Pagination.MaxItems)
+		fmt.Fprintln(w, pagination)
 		w.Flush()
 	case string(cmd.Json):
 		fmt.Println(string(data[:]))

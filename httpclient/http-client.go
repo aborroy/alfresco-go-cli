@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/aborroy/alfresco-cli/nativestore"
@@ -23,6 +24,7 @@ type HttpExecution struct {
 	Method             string
 	Data               string
 	Url                string
+	Parameters         url.Values
 	Format             Format
 	ResponseBodyOutput io.Writer
 }
@@ -40,7 +42,11 @@ func Execute(execution *HttpExecution) error {
 	if execution.Format == Json {
 		payload = bytes.NewBufferString(execution.Data)
 	}
-	request, err := http.NewRequest(execution.Method, storedServer+execution.Url, payload)
+	var urlStr = storedServer + execution.Url
+	if execution.Parameters != nil {
+		urlStr = urlStr + "?" + execution.Parameters.Encode()
+	}
+	request, err := http.NewRequest(execution.Method, urlStr, payload)
 	if err != nil {
 		return err
 	}
