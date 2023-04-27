@@ -28,6 +28,7 @@ Flags:
 
 Use "alfresco [command] --help" for more information about a command.
 ```
+![sample](https://user-images.githubusercontent.com/48685308/234789201-59f39749-da46-4630-9562-089f826e8ea9.gif)
 
 ## Configuration
 
