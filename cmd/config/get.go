@@ -13,10 +13,13 @@ var configGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get connection details",
 	Run: func(cmd *cobra.Command, args []string) {
-		storedServer := viper.GetString(nativestore.DefaultLabel)
+		storedServer := viper.GetString(nativestore.UrlLabel)
 		username, password, _err := nativestore.Get(storedServer)
 		if _err == nil {
 			fmt.Println("server:", storedServer)
+			if viper.GetString(nativestore.ProtocolLabel) == "https" {
+				fmt.Println("insecure:", viper.GetString(nativestore.InsecureLabel))
+			}
 			fmt.Println("username:", username)
 			fmt.Println("password:", password)
 		} else {

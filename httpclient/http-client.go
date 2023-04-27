@@ -2,6 +2,7 @@ package httpclient
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/base64"
 	"io"
 	"log"
@@ -34,9 +35,27 @@ func basicAuth(username, password string) string {
 	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 }
 
+func createHttpClient(tlsEnabled bool, insecureAllowed bool) *http.Client {
+	var tlsConfig *tls.Config
+	if tlsEnabled && insecureAllowed {
+		tlsConfig = &tls.Config{
+			InsecureSkipVerify: true,
+		}
+	}
+	client := http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: tlsConfig,
+		},
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	return &client
+}
+
 func Execute(execution *HttpExecution) error {
 
-	var storedServer, username, password = nativestore.GetDetails()
+	var storedServer, username, password, tlsEnabled, insecureAllowed = nativestore.GetDetails()
 
 	var payload io.Reader
 	if execution.Format == Json {
@@ -54,8 +73,7 @@ func Execute(execution *HttpExecution) error {
 	if execution.Format == Json {
 		request.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
-	client := http.Client{}
-	response, err := client.Do(request)
+	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
 		return err
 	}
@@ -70,7 +88,7 @@ func Execute(execution *HttpExecution) error {
 
 func ExecuteUploadContent(execution *HttpExecution) error {
 
-	var storedServer, username, password = nativestore.GetDetails()
+	var storedServer, username, password, tlsEnabled, insecureAllowed = nativestore.GetDetails()
 
 	r, w := io.Pipe()
 	request, err := http.NewRequest(execution.Method, storedServer+execution.Url, r)
@@ -94,8 +112,7 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 		}
 	}()
 
-	client := http.Client{}
-	response, err := client.Do(request)
+	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
 		return err
 	}

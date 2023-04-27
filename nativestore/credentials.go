@@ -9,6 +9,9 @@ import (
 )
 
 const DefaultLabel string = "alfresco"
+const UrlLabel string = DefaultLabel + ".url"
+const ProtocolLabel string = DefaultLabel + ".protocol"
+const InsecureLabel string = DefaultLabel + ".insecure"
 
 func Set(url, username, secret string) error {
 	creds := credentials.Credentials{
@@ -30,8 +33,8 @@ func Delete(url string) error {
 	return store.Delete(url)
 }
 
-func GetDetails() (string, string, string) {
-	var storedServer = viper.GetString(DefaultLabel)
+func GetDetails() (string, string, string, bool, bool) {
+	var storedServer = viper.GetString(UrlLabel)
 	if storedServer == "" {
 		fmt.Println("Use 'alfresco config set' to provide connection details")
 		os.Exit(1)
@@ -41,5 +44,12 @@ func GetDetails() (string, string, string) {
 		fmt.Println(_err)
 		os.Exit(1)
 	}
-	return storedServer, username, password
+	var protocol = viper.GetString(ProtocolLabel)
+	var tls bool = false
+	var insecure bool = false
+	if protocol == "https" {
+		tls = true
+		insecure = viper.GetBool(InsecureLabel)
+	}
+	return storedServer, username, password, tls, insecure
 }

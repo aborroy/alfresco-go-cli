@@ -134,7 +134,6 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* TLS protocol support
 * Specific credentials per command
 * Progress log
 * Download folder

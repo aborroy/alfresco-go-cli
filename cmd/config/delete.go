@@ -13,7 +13,7 @@ var configDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Connection details removal",
 	Run: func(cmd *cobra.Command, args []string) {
-		storedServer := viper.GetString(nativestore.DefaultLabel)
+		storedServer := viper.GetString(nativestore.UrlLabel)
 		_err := nativestore.Delete(storedServer)
 		if _err != nil {
 			fmt.Println(_err)
