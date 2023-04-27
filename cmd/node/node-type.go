@@ -98,16 +98,12 @@ func outputNodeList(data []byte, format string) {
 			fmt.Fprintln(w, node.Entry.ID+"\t"+node.Entry.Name+"\t"+node.Entry.ModifiedAt+"\t"+node.Entry.ModifiedByUser.ID)
 		}
 		w.Flush()
-		w = tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
-		fmt.Fprintln(w, "COUNT\tMORE\tTOTAL\tSKIP\tMAX")
-		pagination := fmt.Sprintf("%d\t%t\t%d\t%d\t%d",
+		fmt.Printf("# Count=%d, HasMoreItems=%t, TotalItems=%d, SkipCount=%d, MaxItems=%d",
 			nodeList.List.Pagination.Count,
 			nodeList.List.Pagination.HasMoreItems,
 			nodeList.List.Pagination.TotalItems,
 			nodeList.List.Pagination.SkipCount,
 			nodeList.List.Pagination.MaxItems)
-		fmt.Fprintln(w, pagination)
-		w.Flush()
 	case string(cmd.Json):
 		fmt.Println(string(data[:]))
 	default:
