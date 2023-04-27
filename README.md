@@ -40,6 +40,12 @@ Following command will store a connection for ACS deployed in `localhost` with d
 ./alfresco config set -s http://localhost:8080/alfresco -u admin -p admin
 ```
 
+When using TLS protocol, an additional boolean flag `insecure` (`false` by default) can be enabled to use Alfresco CLI against Alfresco Servers configured with self-signed certificates
+
+```
+./alfresco config set -s https://localhost/alfresco -u admin -p admin --insecure true
+```
+
 >> Note that this command will create a `.alfresco` configuration file on the same folder
 
 ## Commands
