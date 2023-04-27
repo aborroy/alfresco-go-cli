@@ -3,7 +3,7 @@ A Command Line Interface for Alfresco Repository using REST API.
 
 ## Usage
 
-Download the binary compiled for your architecture (Linux, Windows or Mac OS) from [**Releases**](/releases).
+Download the binary compiled for your architecture (Linux, Windows or Mac OS) from [**Releases**]((https://github.com/aborroy/alfresco-go-cli/releases).
 
 >> You may rename the binary to `alfresco`, all the following samples are using this command name by default.
 
