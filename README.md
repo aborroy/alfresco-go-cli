@@ -23,11 +23,16 @@ Available Commands:
   node        Manage nodes
 
 Flags:
-  -h, --help            help for alfresco
-  -o, --output string   Output format. E.g.: 'default', 'json' or 'id'. (default "default")
+  -h, --help              help for alfresco
+  -o, --output string     Output format. E.g.: 'default', 'json' or 'id'. (default "default")
+  -p, --password string   Alfresco Password for the Username (overrides default stored config value)
+  -u, --username string   Alfresco Username (overrides default stored config value)
 
 Use "alfresco [command] --help" for more information about a command.
 ```
+
+**Sample working session**
+
 ![sample](https://user-images.githubusercontent.com/48685308/234789201-59f39749-da46-4630-9562-089f826e8ea9.gif)
 
 ## Configuration
@@ -47,6 +52,14 @@ When using TLS protocol, an additional boolean flag `insecure` (`false` by defau
 ```
 
 >> Note that this command will create a `.alfresco` configuration file on the same folder
+
+These credentials will be used by default for every command, however using specific credentials for a single command can be achived by setting `username` and `password` parameters. 
+
+For instance, executing the `node list` command with user `test` and password `test` can be done using the following command:
+
+```
+./alfresco node list -i -root- -u test -p test
+```
 
 ## Commands
 
@@ -95,6 +108,7 @@ a8e32ff6-6140-4a19-84a5-c157820fc376 IMAP Home        2023-04-11T09:21:42.768+00
 08870377-0da9-4a2d-964c-e77e4f3b5e21 Shared           2023-04-25T13:48:13.831+0000 admin
 44847591-6db1-44f8-a09d-e91385de3583 Sites            2023-04-11T09:21:50.198+0000 System
 308b599d-6653-4190-aee3-18e6a0f7e9fd User Homes       2023-04-13T14:21:40.945+0000 admin
+# Count=7, HasMoreItems=false, TotalItems=7, SkipCount=0, MaxItems=100
 ```
 
 In order to get raw JSON Response, `json` parameter can be used.
@@ -140,7 +154,6 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* Specific credentials per command
 * Progress log
 * Download folder
 * Site commands

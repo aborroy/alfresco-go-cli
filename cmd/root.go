@@ -21,6 +21,9 @@ var RootCmd = &cobra.Command{
 	Short: "A Command Line Interface for Alfresco Content Services.",
 }
 
+var UsernameParam string
+var PasswordParam string
+
 func Execute() {
 	_err := RootCmd.Execute()
 	if _err != nil {
@@ -43,5 +46,7 @@ func init() {
 		os.WriteFile(".alfresco", nil, 0644)
 	}
 
+	RootCmd.PersistentFlags().StringVarP(&UsernameParam, "username", "u", "", "Alfresco Username (overrides default stored config value)")
+	RootCmd.PersistentFlags().StringVarP(&PasswordParam, "password", "p", "", "Alfresco Password for the Username (overrides default stored config value)")
 	RootCmd.PersistentFlags().StringP("output", "o", "default", "Output format. E.g.: 'default', 'json' or 'id'.")
 }

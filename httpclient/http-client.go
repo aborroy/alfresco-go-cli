@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/base64"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/nativestore"
 )
 
@@ -30,9 +32,13 @@ type HttpExecution struct {
 	ResponseBodyOutput io.Writer
 }
 
-func basicAuth(username, password string) string {
+func setBasicAuthHeader(request *http.Request, username, password string) {
+	if cmd.UsernameParam != "" {
+		username = cmd.UsernameParam
+		password = cmd.PasswordParam
+	}
 	auth := username + ":" + password
-	return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+	request.Header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(auth)))
 }
 
 func createHttpClient(tlsEnabled bool, insecureAllowed bool) *http.Client {
@@ -69,13 +75,17 @@ func Execute(execution *HttpExecution) error {
 	if err != nil {
 		return err
 	}
-	request.Header.Add("Authorization", basicAuth(username, password))
+	setBasicAuthHeader(request, username, password)
 	if execution.Format == Json {
 		request.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
 	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
 		return err
+	}
+	if response.StatusCode != http.StatusOK {
+		fmt.Println(response.StatusCode, http.StatusText(response.StatusCode))
+		os.Exit(1)
 	}
 	defer func() {
 		if err := response.Body.Close(); err != nil {
@@ -96,7 +106,7 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 		log.Println(err)
 		return err
 	}
-	request.Header.Add("Authorization", basicAuth(username, password))
+	setBasicAuthHeader(request, username, password)
 
 	go func() {
 		defer w.Close()
@@ -115,6 +125,10 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
 		return err
+	}
+	if response.StatusCode != http.StatusOK {
+		fmt.Println(response.StatusCode, http.StatusText(response.StatusCode))
+		os.Exit(1)
 	}
 	defer func() {
 		if err := response.Body.Close(); err != nil {
