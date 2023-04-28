@@ -58,7 +58,7 @@ These credentials will be used by default for every command, however using speci
 For instance, executing the `node list` command with user `test` and password `test` can be done using the following command:
 
 ```
-./alfresco node list -i -root- -u test -p test
+./alfresco node list -i -root- --username test --password test
 ```
 
 ## Logs
@@ -165,7 +165,6 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* Update content of node
 * Download folder
 * Get node by path
 * Control concurrency rate

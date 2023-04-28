@@ -1,6 +1,7 @@
 package node
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -17,6 +18,7 @@ var nodeName string
 var nodeType string
 var aspects []string
 var properties []string
+var fileNameUpdate string
 var nodeUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update Node information",
@@ -60,6 +62,24 @@ var nodeUpdateCmd = &cobra.Command{
 
 		log.Println(NodeUpdateCmdId, "Node "+nodeName+" has been updated")
 
+		if fileNameUpdate != "" {
+			var node Node
+			json.Unmarshal(responseBody.Bytes(), &node)
+
+			var responseBodyContent bytes.Buffer
+			uploadExecution := &httpclient.HttpExecution{
+				Method:             http.MethodPut,
+				Data:               fileNameUpdate,
+				Format:             httpclient.Content,
+				Url:                nodeUrlPath + node.Entry.ID + "/content",
+				ResponseBodyOutput: &responseBodyContent,
+			}
+			_error = httpclient.ExecuteUploadContent(uploadExecution)
+			if _error != nil {
+				cmd.ExitWithError(CreateNodeCmdId, _error)
+			}
+		}
+
 	},
 }
 
@@ -69,5 +89,6 @@ func init() {
 	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Change Node Type")
 	nodeUpdateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
 	nodeUpdateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
+	nodeUpdateCmd.Flags().StringVarP(&fileNameUpdate, "file", "f", "", "Filename to be uploaded (complete or local path)")
 	nodeUpdateCmd.Flags().SortFlags = false
 }

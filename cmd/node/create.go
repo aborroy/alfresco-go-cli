@@ -80,12 +80,12 @@ func CreateNode(
 	}
 }
 
-var fileName string
+var fileNameCreate string
 var nodeCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create new Node",
 	Run: func(command *cobra.Command, args []string) {
-		response := CreateNode(command, nodeId, nodeName, nodeType, aspects, properties, fileName)
+		response := CreateNode(command, nodeId, nodeName, nodeType, aspects, properties, fileNameCreate)
 		var format, _ = command.Flags().GetString("output")
 		outputNode(response.Bytes(), format)
 		log.Println(CreateNodeCmdId, "Node "+nodeName+" has been created under "+nodeId)
@@ -98,6 +98,6 @@ func init() {
 	nodeCreateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Node Type")
 	nodeCreateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
 	nodeCreateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
-	nodeCreateCmd.Flags().StringVarP(&fileName, "file", "f", "", "Filename to be uploaded (complete or local path)")
+	nodeCreateCmd.Flags().StringVarP(&fileNameCreate, "file", "f", "", "Filename to be uploaded (complete or local path)")
 	nodeCreateCmd.Flags().SortFlags = false
 }

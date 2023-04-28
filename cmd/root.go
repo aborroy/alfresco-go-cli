@@ -51,7 +51,7 @@ func init() {
 		os.WriteFile(".alfresco", nil, 0644)
 	}
 
-	RootCmd.PersistentFlags().StringVarP(&UsernameParam, "username", "u", "", "Alfresco Username (overrides default stored config value)")
-	RootCmd.PersistentFlags().StringVarP(&PasswordParam, "password", "p", "", "Alfresco Password for the Username (overrides default stored config value)")
+	RootCmd.PersistentFlags().StringVar(&UsernameParam, "username", "", "Alfresco Username (overrides default stored config value)")
+	RootCmd.PersistentFlags().StringVar(&PasswordParam, "password", "", "Alfresco Password for the Username (overrides default stored config value)")
 	RootCmd.PersistentFlags().StringP("output", "o", "default", "Output format. E.g.: 'default', 'json' or 'id'.")
 }
