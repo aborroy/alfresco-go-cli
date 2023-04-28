@@ -61,6 +61,17 @@ For instance, executing the `node list` command with user `test` and password `t
 ./alfresco node list -i -root- -u test -p test
 ```
 
+## Logs
+
+Local file `alfresco.log` is capturing command logs. The log file includes activity entries and error details.
+
+```
+$ tail -f alfresco.log
+2023/04/28 10:12:48 [NODE UPLOAD FOLDER] Uploading local folder ../tmp to Alfresco Repository folder 72d25c97-4ab9-47ff-8b70-b67c5f4939e8
+2023/04/28 10:12:56 [NODE UPLOAD FOLDER] Folder ../tmp has been uploaded
+2023/04/28 10:12:56 ERROR [NODE CREATE] Post "http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/nodes/4960a8a5-a258-4fed-84b4-73ae8cf9b2de/children": EOF
+```
+
 ## Commands
 
 **Node**
@@ -154,7 +165,6 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* Progress log
 * Download folder
 * Site commands
 * Person commands

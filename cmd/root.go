@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -31,6 +33,12 @@ func Execute() {
 	}
 }
 
+func ExitWithError(CmdId string, err error) {
+	fmt.Println("ERROR", CmdId, err)
+	log.Fatal("ERROR " + CmdId + " " + err.Error())
+	os.Exit(1)
+}
+
 func init() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
@@ -39,9 +47,7 @@ func init() {
 		viper.SetConfigType("yaml")
 		viper.SetConfigName(".alfresco")
 	}
-
 	viper.AutomaticEnv()
-
 	if err := viper.ReadInConfig(); err != nil {
 		os.WriteFile(".alfresco", nil, 0644)
 	}

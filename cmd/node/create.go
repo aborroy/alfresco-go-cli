@@ -3,17 +3,19 @@ package node
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 	"strings"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
 	"github.com/spf13/cobra"
 )
 
+const CreateNodeCmdId string = "[NODE CREATE]"
+
 func CreateNode(
-	cmd *cobra.Command,
+	command *cobra.Command,
 	nodeId string,
 	nodeName string,
 	nodeType string,
@@ -53,8 +55,7 @@ func CreateNode(
 
 	_error := httpclient.Execute(execution)
 	if _error != nil {
-		fmt.Println(_error)
-		os.Exit(1)
+		cmd.ExitWithError(CreateNodeCmdId, _error)
 	}
 
 	if fileName != "" {
@@ -69,10 +70,9 @@ func CreateNode(
 			Url:                nodeUrlPath + node.Entry.ID + "/content",
 			ResponseBodyOutput: &responseBodyContent,
 		}
-		_errorContent := httpclient.ExecuteUploadContent(uploadExecution)
-		if _errorContent != nil {
-			fmt.Println(_errorContent)
-			os.Exit(1)
+		_error = httpclient.ExecuteUploadContent(uploadExecution)
+		if _error != nil {
+			cmd.ExitWithError(CreateNodeCmdId, _error)
 		}
 		return responseBodyContent
 	} else {
@@ -84,10 +84,11 @@ var fileName string
 var nodeCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create new Node",
-	Run: func(cmd *cobra.Command, args []string) {
-		response := CreateNode(cmd, nodeId, nodeName, nodeType, aspects, properties, fileName)
-		var format, _ = cmd.Flags().GetString("output")
+	Run: func(command *cobra.Command, args []string) {
+		response := CreateNode(command, nodeId, nodeName, nodeType, aspects, properties, fileName)
+		var format, _ = command.Flags().GetString("output")
 		outputNode(response.Bytes(), format)
+		log.Println(CreateNodeCmdId, "Node "+nodeName+" has been created under "+nodeId)
 	},
 }
 

@@ -1,14 +1,16 @@
 package config
 
 import (
-	"fmt"
-	"os"
+	"log"
 	"strings"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/nativestore"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
+
+const ConfigSetCmdId string = "[CONFIG SET]"
 
 var server string
 var username string
@@ -17,11 +19,10 @@ var insecure bool
 var configSetCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Connection details storage",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 		_err := nativestore.Set(server, username, password)
 		if _err != nil {
-			fmt.Println(_err)
-			os.Exit(1)
+			cmd.ExitWithError(ConfigSetCmdId, _err)
 		} else {
 			viper.Set(nativestore.UrlLabel, server)
 			protocol := "http"
@@ -32,6 +33,7 @@ var configSetCmd = &cobra.Command{
 			viper.Set(nativestore.InsecureLabel, insecure)
 			viper.WriteConfig()
 		}
+		log.Println(ConfigSetCmdId, "Configuration set for", server)
 	},
 }
 

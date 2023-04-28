@@ -1,18 +1,20 @@
 package node
 
 import (
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
 	"github.com/spf13/cobra"
 )
 
+const GetNodeCmdId string = "[NODE GET]"
+
 var nodeGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get Node information",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 
 		execution := &httpclient.HttpExecution{
 			Method:             http.MethodGet,
@@ -23,12 +25,13 @@ var nodeGetCmd = &cobra.Command{
 
 		_error := httpclient.Execute(execution)
 		if _error != nil {
-			fmt.Println(_error)
-			os.Exit(1)
+			cmd.ExitWithError(GetNodeCmdId, _error)
 		}
 
-		var format, _ = cmd.Flags().GetString("output")
+		var format, _ = command.Flags().GetString("output")
 		outputNode(responseBody.Bytes(), format)
+
+		log.Println(GetNodeCmdId, "Details for node "+nodeId+" have been retrieved")
 
 	},
 }

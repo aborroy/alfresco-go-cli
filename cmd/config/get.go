@@ -2,17 +2,20 @@ package config
 
 import (
 	"fmt"
-	"os"
+	"log"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/nativestore"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+const ConfigGetCmdId string = "[CONFIG GET]"
+
 var configGetCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get connection details",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 		storedServer := viper.GetString(nativestore.UrlLabel)
 		username, password, _err := nativestore.Get(storedServer)
 		if _err == nil {
@@ -23,9 +26,9 @@ var configGetCmd = &cobra.Command{
 			fmt.Println("username:", username)
 			fmt.Println("password:", password)
 		} else {
-			fmt.Println(_err)
-			os.Exit(1)
+			cmd.ExitWithError(ConfigGetCmdId, _err)
 		}
+		log.Println(ConfigGetCmdId, "Configuration get for", storedServer)
 	},
 }
 

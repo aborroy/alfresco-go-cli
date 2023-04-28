@@ -1,32 +1,31 @@
 package node
 
 import (
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
 	"github.com/spf13/cobra"
 )
 
+const DeleteNodeCmdId string = "[NODE DELETE]"
+
 var nodeDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete Node",
-	Run: func(cmd *cobra.Command, args []string) {
-
+	Run: func(command *cobra.Command, args []string) {
 		execution := &httpclient.HttpExecution{
 			Method:             http.MethodDelete,
 			Format:             httpclient.None,
 			Url:                nodeUrlPath + nodeId,
 			ResponseBodyOutput: &responseBody,
 		}
-
 		_error := httpclient.Execute(execution)
 		if _error != nil {
-			fmt.Println(_error)
-			os.Exit(1)
+			cmd.ExitWithError(DeleteNodeCmdId, _error)
 		}
-
+		log.Println(DeleteNodeCmdId, "Node "+nodeId+" has been deleted")
 	},
 }
 

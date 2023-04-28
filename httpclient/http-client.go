@@ -59,6 +59,14 @@ func createHttpClient(tlsEnabled bool, insecureAllowed bool) *http.Client {
 	return &client
 }
 
+func checkStatusResponse(httpStatus int) {
+	if httpStatus != http.StatusOK && httpStatus != http.StatusCreated {
+		fmt.Println("HTTP ERROR", httpStatus, http.StatusText(httpStatus))
+		log.Println("HTTP ERROR", httpStatus, http.StatusText(httpStatus))
+		os.Exit(1)
+	}
+}
+
 func Execute(execution *HttpExecution) error {
 
 	var storedServer, username, password, tlsEnabled, insecureAllowed = nativestore.GetDetails()
@@ -83,10 +91,7 @@ func Execute(execution *HttpExecution) error {
 	if err != nil {
 		return err
 	}
-	if response.StatusCode != http.StatusOK {
-		fmt.Println(response.StatusCode, http.StatusText(response.StatusCode))
-		os.Exit(1)
-	}
+	checkStatusResponse(response.StatusCode)
 	defer func() {
 		if err := response.Body.Close(); err != nil {
 			log.Println(storedServer + execution.Url + " - Failed to close response body - " + err.Error())
@@ -126,10 +131,7 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 	if err != nil {
 		return err
 	}
-	if response.StatusCode != http.StatusOK {
-		fmt.Println(response.StatusCode, http.StatusText(response.StatusCode))
-		os.Exit(1)
-	}
+	checkStatusResponse(response.StatusCode)
 	defer func() {
 		if err := response.Body.Close(); err != nil {
 			log.Println(storedServer + execution.Url + " - Failed to close response body - " + err.Error())

@@ -1,21 +1,23 @@
 package node
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"net/url"
-	"os"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
 	"github.com/spf13/cobra"
 )
+
+const NodeChildrenCmdId string = "[NODE LIST]"
 
 var skipCount string
 var maxItems string
 var nodeChildrenCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Get children nodes",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 
 		params := url.Values{}
 		params.Add("skipCount", skipCount)
@@ -31,12 +33,13 @@ var nodeChildrenCmd = &cobra.Command{
 
 		_error := httpclient.Execute(execution)
 		if _error != nil {
-			fmt.Println(_error)
-			os.Exit(1)
+			cmd.ExitWithError(NodeChildrenCmdId, _error)
 		}
 
-		var format, _ = cmd.Flags().GetString("output")
+		var format, _ = command.Flags().GetString("output")
 		outputNodeList(responseBody.Bytes(), format)
+
+		log.Println(NodeChildrenCmdId, "Details for children nodes of "+nodeId+" have been retrieved")
 
 	},
 }

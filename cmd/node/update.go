@@ -2,14 +2,16 @@ package node
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"os"
 	"strings"
 
+	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
 	"github.com/spf13/cobra"
 )
+
+const NodeUpdateCmdId string = "[NODE UPDATE]"
 
 var nodeName string
 var nodeType string
@@ -18,7 +20,7 @@ var properties []string
 var nodeUpdateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "Update Node information",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(command *cobra.Command, args []string) {
 
 		var nodeUpdate NodeUpdate
 		if nodeName != "" {
@@ -50,12 +52,13 @@ var nodeUpdateCmd = &cobra.Command{
 
 		_error := httpclient.Execute(execution)
 		if _error != nil {
-			fmt.Println(_error)
-			os.Exit(1)
+			cmd.ExitWithError(NodeUpdateCmdId, _error)
 		}
 
-		var format, _ = cmd.Flags().GetString("output")
+		var format, _ = command.Flags().GetString("output")
 		outputNode(responseBody.Bytes(), format)
+
+		log.Println(NodeUpdateCmdId, "Node "+nodeName+" has been updated")
 
 	},
 }
