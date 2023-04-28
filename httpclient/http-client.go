@@ -61,8 +61,14 @@ func createHttpClient(tlsEnabled bool, insecureAllowed bool) *http.Client {
 	return &client
 }
 
+var validHttpResponse = map[int]bool{
+	http.StatusOK:        true,
+	http.StatusCreated:   true,
+	http.StatusNoContent: true,
+}
+
 func checkStatusResponse(httpStatus int) {
-	if httpStatus != http.StatusOK && httpStatus != http.StatusCreated {
+	if !validHttpResponse[httpStatus] {
 		fmt.Println("HTTP ERROR", httpStatus, http.StatusText(httpStatus))
 		log.Println("HTTP ERROR", httpStatus, http.StatusText(httpStatus))
 		os.Exit(1)
