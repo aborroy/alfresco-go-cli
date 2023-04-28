@@ -165,7 +165,11 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
+* Update content of node
 * Download folder
+* Get node by path
+* Control concurrency rate
+* [Generate documentation automatically](https://github.com/spf13/cobra/blob/main/doc/md_docs.md)
 * Site commands
 * Person commands
 * Group commands

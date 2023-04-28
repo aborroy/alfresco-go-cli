@@ -36,7 +36,6 @@ func Execute() {
 func ExitWithError(CmdId string, err error) {
 	fmt.Println("ERROR", CmdId, err)
 	log.Fatal("ERROR " + CmdId + " " + err.Error())
-	os.Exit(1)
 }
 
 func init() {

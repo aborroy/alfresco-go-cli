@@ -23,6 +23,8 @@ const (
 	None    Format = "none"
 )
 
+const HttpClientId string = "[HTTP]"
+
 type HttpExecution struct {
 	Method             string
 	Data               string
@@ -81,7 +83,7 @@ func Execute(execution *HttpExecution) error {
 	}
 	request, err := http.NewRequest(execution.Method, urlStr, payload)
 	if err != nil {
-		return err
+		cmd.ExitWithError(HttpClientId, err)
 	}
 	setBasicAuthHeader(request, username, password)
 	if execution.Format == Json {
@@ -89,7 +91,7 @@ func Execute(execution *HttpExecution) error {
 	}
 	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
-		return err
+		cmd.ExitWithError(HttpClientId, err)
 	}
 	checkStatusResponse(response.StatusCode)
 	defer func() {
@@ -108,8 +110,7 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 	r, w := io.Pipe()
 	request, err := http.NewRequest(execution.Method, storedServer+execution.Url, r)
 	if err != nil {
-		log.Println(err)
-		return err
+		cmd.ExitWithError(HttpClientId, err)
 	}
 	setBasicAuthHeader(request, username, password)
 
@@ -129,9 +130,42 @@ func ExecuteUploadContent(execution *HttpExecution) error {
 
 	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
 	if err != nil {
-		return err
+		cmd.ExitWithError(HttpClientId, err)
 	}
 	checkStatusResponse(response.StatusCode)
+	defer func() {
+		if err := response.Body.Close(); err != nil {
+			log.Println(storedServer + execution.Url + " - Failed to close response body - " + err.Error())
+		}
+	}()
+	_, err = io.Copy(execution.ResponseBodyOutput, response.Body)
+	return err
+
+}
+
+func ExecuteDownloadContent(execution *HttpExecution) error {
+
+	var storedServer, username, password, tlsEnabled, insecureAllowed = nativestore.GetDetails()
+
+	out, err := os.Create(execution.Data)
+	if err != nil {
+		cmd.ExitWithError(HttpClientId, err)
+	}
+	defer out.Close()
+
+	var payload io.Reader
+	request, err := http.NewRequest(execution.Method, storedServer+execution.Url, payload)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	setBasicAuthHeader(request, username, password)
+	response, err := createHttpClient(tlsEnabled, insecureAllowed).Do(request)
+	if err != nil {
+		cmd.ExitWithError(HttpClientId, err)
+	}
+	checkStatusResponse(response.StatusCode)
+	io.Copy(out, response.Body)
 	defer func() {
 		if err := response.Body.Close(); err != nil {
 			log.Println(storedServer + execution.Url + " - Failed to close response body - " + err.Error())
