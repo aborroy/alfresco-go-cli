@@ -1,6 +1,7 @@
 package node
 
 import (
+	"bytes"
 	"log"
 	"net/http"
 	"net/url"
@@ -12,35 +13,43 @@ import (
 
 const NodeChildrenCmdId string = "[NODE LIST]"
 
+func ListNode(
+	nodeId string,
+	skipCount string,
+	maxItems string) bytes.Buffer {
+
+	var responseBody bytes.Buffer
+
+	params := url.Values{}
+	params.Add("skipCount", skipCount)
+	params.Add("maxItems", maxItems)
+
+	execution := &httpclient.HttpExecution{
+		Method:             http.MethodGet,
+		Format:             httpclient.None,
+		Url:                nodeUrlPath + nodeId + "/children",
+		Parameters:         params,
+		ResponseBodyOutput: &responseBody,
+	}
+
+	_error := httpclient.Execute(execution)
+	if _error != nil {
+		cmd.ExitWithError(NodeChildrenCmdId, _error)
+	}
+
+	return responseBody
+}
+
 var skipCount string
 var maxItems string
 var nodeChildrenCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Get children nodes",
 	Run: func(command *cobra.Command, args []string) {
-
-		params := url.Values{}
-		params.Add("skipCount", skipCount)
-		params.Add("maxItems", maxItems)
-
-		execution := &httpclient.HttpExecution{
-			Method:             http.MethodGet,
-			Format:             httpclient.None,
-			Url:                nodeUrlPath + nodeId + "/children",
-			Parameters:         params,
-			ResponseBodyOutput: &responseBody,
-		}
-
-		_error := httpclient.Execute(execution)
-		if _error != nil {
-			cmd.ExitWithError(NodeChildrenCmdId, _error)
-		}
-
+		response := ListNode(nodeId, skipCount, maxItems)
 		var format, _ = command.Flags().GetString("output")
-		outputNodeList(responseBody.Bytes(), format)
-
+		outputNodeList(response.Bytes(), format)
 		log.Println(NodeChildrenCmdId, "Details for children nodes of "+nodeId+" have been retrieved")
-
 	},
 }
 

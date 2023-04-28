@@ -17,18 +17,18 @@ import (
 
 const NodeUploadFolderCmdId string = "[NODE UPLOAD FOLDER]"
 
-var folderName string
+var folderNameUpload string
 var outputResponseBody bytes.Buffer
-var wg sync.WaitGroup
+var wgUpload sync.WaitGroup
 var nodeUploadFolderCmd = &cobra.Command{
 	Use:   "upload-folder",
 	Short: "Upload local folder to Alfresco Repository",
 	Run: func(command *cobra.Command, args []string) {
 		log.Println(NodeUploadFolderCmdId,
-			"Uploading local folder "+folderName+" to Alfresco Repository folder "+nodeId)
+			"Uploading local folder "+folderNameUpload+" to Alfresco Repository folder "+nodeId)
 		tree := make(map[string]string)
 		var hiddenPaths []string
-		err := filepath.WalkDir(folderName,
+		err := filepath.WalkDir(folderNameUpload,
 			func(path string, info fs.DirEntry, err error) error {
 				if err != nil {
 					return err
@@ -41,18 +41,18 @@ var nodeUploadFolderCmd = &cobra.Command{
 							if parentId == "" {
 								parentId = nodeId
 							}
-							response := CreateNode(command, parentId, info.Name(), TypeFolder, nil, nil, "")
+							response := CreateNode(parentId, info.Name(), TypeFolder, nil, nil, "")
 							var node Node
 							json.Unmarshal(response.Bytes(), &node)
 							tree[path] = node.Entry.ID
-							if folderName == path {
+							if folderNameUpload == path {
 								outputResponseBody = response
 							}
 							log.Println(NodeUploadFolderCmdId, "Folder "+path+" has been uploaded")
 						} else {
 							parentId := tree[parentPath]
-							wg.Add(1)
-							go createFile(command, parentId, path, info)
+							wgUpload.Add(1)
+							go createFile(parentId, path, info)
 						}
 					} else {
 						if info.IsDir() {
@@ -66,26 +66,26 @@ var nodeUploadFolderCmd = &cobra.Command{
 				}
 				return nil
 			})
-		wg.Wait()
+		wgUpload.Wait()
 		if err != nil {
 			cmd.ExitWithError(NodeUploadFolderCmdId, err)
 		}
 		var format, _ = command.Flags().GetString("output")
 		outputNode(outputResponseBody.Bytes(), format)
 		log.Println(NodeUploadFolderCmdId,
-			"Uploaded local folder "+folderName+" to Alfresco Repository folder "+nodeId)
+			"Uploaded local folder "+folderNameUpload+" to Alfresco Repository folder "+nodeId)
 	},
 }
 
-func createFile(cmd *cobra.Command, parentId string, path string, info fs.DirEntry) {
-	response := CreateNode(cmd, parentId, info.Name(), TypeContent, nil, nil, path)
+func createFile(parentId string, path string, info fs.DirEntry) {
+	response := CreateNode(parentId, info.Name(), TypeContent, nil, nil, path)
 	var node Node
 	json.Unmarshal(response.Bytes(), &node)
 	log.Println(NodeUploadFolderCmdId, "File "+path+" has been uploaded")
-	wg.Done()
+	wgUpload.Done()
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeUploadFolderCmd)
-	nodeUploadFolderCmd.Flags().StringVarP(&folderName, "directory", "d", "", "Folder to be uploaded (complete or local path)")
+	nodeUploadFolderCmd.Flags().StringVarP(&folderNameUpload, "directory", "d", "", "Local folder to be uploaded (complete or local path)")
 }

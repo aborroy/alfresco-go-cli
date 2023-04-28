@@ -15,7 +15,6 @@ import (
 const CreateNodeCmdId string = "[NODE CREATE]"
 
 func CreateNode(
-	command *cobra.Command,
 	nodeId string,
 	nodeName string,
 	nodeType string,
@@ -85,7 +84,7 @@ var nodeCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create new Node",
 	Run: func(command *cobra.Command, args []string) {
-		response := CreateNode(command, nodeId, nodeName, nodeType, aspects, properties, fileNameCreate)
+		response := CreateNode(nodeId, nodeName, nodeType, aspects, properties, fileNameCreate)
 		var format, _ = command.Flags().GetString("output")
 		outputNode(response.Bytes(), format)
 		log.Println(CreateNodeCmdId, "Node "+nodeName+" has been created under "+nodeId)

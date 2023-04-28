@@ -86,12 +86,13 @@ Usage:
   alfresco node [command]
 
 Available Commands:
-  create        Create new Node
-  delete        Delete Node
-  get           Get Node information
-  list          Get children nodes
-  update        Update Node information
-  upload-folder Upload local folder to Alfresco Repository
+  create          Create new Node
+  delete          Delete Node
+  download-folder Download Alfresco Repository folder to local folder
+  get             Get Node information (properties and content)
+  list            Get children nodes
+  update          Update Node information
+  upload-folder   Upload local folder to Alfresco Repository
 
 Flags:
   -i, --nodeId string   Node Id in Alfresco Repository
@@ -165,7 +166,6 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* Download folder
 * Get node by path
 * Control concurrency rate
 * [Generate documentation automatically](https://github.com/spf13/cobra/blob/main/doc/md_docs.md)
