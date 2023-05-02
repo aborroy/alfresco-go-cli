@@ -25,8 +25,9 @@ Available Commands:
 Flags:
   -h, --help              help for alfresco
   -o, --output string     Output format. E.g.: 'default', 'json' or 'id'. (default "default")
-  -p, --password string   Alfresco Password for the Username (overrides default stored config value)
-  -u, --username string   Alfresco Username (overrides default stored config value)
+      --password string   Alfresco Password for the Username (overrides default stored config value)
+      --username string   Alfresco Username (overrides default stored config value)
+  -v, --version           version for alfresco
 
 Use "alfresco [command] --help" for more information about a command.
 ```
@@ -49,6 +50,12 @@ When using TLS protocol, an additional boolean flag `insecure` (`false` by defau
 
 ```
 ./alfresco config set -s https://localhost/alfresco -u admin -p admin --insecure true
+```
+
+Default number of results when retrieving a list of nodes from Alfresco Repository can be customized using integer flag `maxItems`. Default value is `100` and maximum value is `1000`.
+
+```
+./alfresco config set -s http://localhost:8080/alfresco -u admin -p password --maxItems 1000
 ```
 
 >> Note that this command will create a `.alfresco` configuration file on the same folder
@@ -169,6 +176,7 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 * Get node by path
 * Control concurrency rate
 * [Generate documentation automatically](https://github.com/spf13/cobra/blob/main/doc/md_docs.md)
+* Provide pre-built programs for Windows, Linux, Mac AMD64 & Mac ARM64
 * Site commands
 * Person commands
 * Group commands

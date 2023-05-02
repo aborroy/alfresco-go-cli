@@ -5,24 +5,27 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/aborroy/alfresco-cli/httpclient"
+	"github.com/aborroy/alfresco-cli/nativestore"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const NodeChildrenCmdId string = "[NODE LIST]"
 
 func ListNode(
 	nodeId string,
-	skipCount string,
-	maxItems string) bytes.Buffer {
+	skipCount int,
+	maxItems int) bytes.Buffer {
 
 	var responseBody bytes.Buffer
 
 	params := url.Values{}
-	params.Add("skipCount", skipCount)
-	params.Add("maxItems", maxItems)
+	params.Add("skipCount", strconv.Itoa(skipCount))
+	params.Add("maxItems", strconv.Itoa(maxItems))
 
 	execution := &httpclient.HttpExecution{
 		Method:             http.MethodGet,
@@ -40,12 +43,15 @@ func ListNode(
 	return responseBody
 }
 
-var skipCount string
-var maxItems string
+var skipCount int
+var maxItems int
 var nodeChildrenCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Get children nodes",
 	Run: func(command *cobra.Command, args []string) {
+		if maxItems == -1 {
+			maxItems = viper.GetInt(nativestore.MaxItemsLabel)
+		}
 		response := ListNode(nodeId, skipCount, maxItems)
 		var format, _ = command.Flags().GetString("output")
 		outputNodeList(response.Bytes(), format)
@@ -55,6 +61,6 @@ var nodeChildrenCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeChildrenCmd)
-	nodeChildrenCmd.Flags().StringVar(&skipCount, "skipCount", "0", "Skip a number of initial nodes from the list")
-	nodeChildrenCmd.Flags().StringVar(&maxItems, "maxItems", "100", "Number of nodes in the response list (max. 1000)")
+	nodeChildrenCmd.Flags().IntVar(&skipCount, "skipCount", 0, "Skip a number of initial nodes from the list")
+	nodeChildrenCmd.Flags().IntVar(&maxItems, "maxItems", -1, "Maximum number of nodes in the response list (max. 1000)")
 }

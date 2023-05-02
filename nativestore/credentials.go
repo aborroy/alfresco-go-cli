@@ -12,6 +12,7 @@ const DefaultLabel string = "alfresco"
 const UrlLabel string = DefaultLabel + ".url"
 const ProtocolLabel string = DefaultLabel + ".protocol"
 const InsecureLabel string = DefaultLabel + ".insecure"
+const MaxItemsLabel string = DefaultLabel + ".maxItems"
 
 func Set(url, username, secret string) error {
 	creds := credentials.Credentials{

@@ -25,6 +25,7 @@ var configGetCmd = &cobra.Command{
 			}
 			fmt.Println("username:", username)
 			fmt.Println("password:", password)
+			fmt.Println("maxItems:", viper.GetInt(nativestore.MaxItemsLabel))
 		} else {
 			cmd.ExitWithError(ConfigGetCmdId, _err)
 		}

@@ -19,8 +19,9 @@ const (
 
 var cfgFile string
 var RootCmd = &cobra.Command{
-	Use:   "alfresco",
-	Short: "A Command Line Interface for Alfresco Content Services.",
+	Use:     "alfresco",
+	Short:   "A Command Line Interface for Alfresco Content Services.",
+	Version: "0.0.1",
 }
 
 var UsernameParam string

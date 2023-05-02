@@ -16,6 +16,7 @@ var server string
 var username string
 var password string
 var insecure bool
+var maxItems int
 var configSetCmd = &cobra.Command{
 	Use:   "set",
 	Short: "Connection details storage",
@@ -31,6 +32,7 @@ var configSetCmd = &cobra.Command{
 			}
 			viper.Set(nativestore.ProtocolLabel, protocol)
 			viper.Set(nativestore.InsecureLabel, insecure)
+			viper.Set(nativestore.MaxItemsLabel, maxItems)
 			viper.WriteConfig()
 		}
 		log.Println(ConfigSetCmdId, "Configuration set for", server)
@@ -43,5 +45,9 @@ func init() {
 	configSetCmd.Flags().StringVarP(&username, "username", "u", "", "Alfresco Username")
 	configSetCmd.Flags().StringVarP(&password, "password", "p", "", "Alfresco Password for the Username")
 	configSetCmd.Flags().BoolVar(&insecure, "insecure", false, "Accept insecure TLS connections (to use with self-signed certificates)")
+	configSetCmd.Flags().IntVar(&maxItems, "maxItems", 100, "Maximum number of nodes in response lists (max. 1000) ")
 	configSetCmd.Flags().SortFlags = false
+	configSetCmd.MarkFlagRequired("server")
+	configSetCmd.MarkFlagRequired("username")
+	configSetCmd.MarkFlagRequired("password")
 }

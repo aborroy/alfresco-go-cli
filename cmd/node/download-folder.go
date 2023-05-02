@@ -4,24 +4,23 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"strconv"
 	"sync"
 
+	"github.com/aborroy/alfresco-cli/nativestore"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const NodeDownloadFolderCmdId string = "[NODE DOWNLOAD FOLDER]"
 
-const DefaultMaxItems int = 10
-
 func getChildren(folderId string, folderName string, skipCount int, maxItems int) {
-	response := ListNode(folderId, strconv.Itoa(skipCount), strconv.Itoa(maxItems))
+	response := ListNode(folderId, skipCount, maxItems)
 	var nodeList NodeList
 	json.Unmarshal(response.Bytes(), &nodeList)
 	for _, node := range nodeList.List.Entries {
 		if node.Entry.IsFolder {
 			os.Mkdir(folderNameDownload+"/"+folderName+"/"+node.Entry.Name, os.ModePerm)
-			getChildren(node.Entry.ID, folderName+"/"+node.Entry.Name, 0, DefaultMaxItems)
+			getChildren(node.Entry.ID, folderName+"/"+node.Entry.Name, 0, viper.GetInt(nativestore.MaxItemsLabel))
 		} else {
 			wgDownload.Add(1)
 			go downloadContent(node.Entry.ID, folderName, node.Entry.Name)
@@ -31,13 +30,13 @@ func getChildren(folderId string, folderName string, skipCount int, maxItems int
 	var hasMoreItems bool = nodeList.List.Pagination.HasMoreItems
 	for hasMoreItems {
 		skipCount = skipCount + maxItems
-		response := ListNode(folderId, strconv.Itoa(skipCount), strconv.Itoa(maxItems))
+		response := ListNode(folderId, skipCount, maxItems)
 		var nodeList NodeList
 		json.Unmarshal(response.Bytes(), &nodeList)
 		for _, node := range nodeList.List.Entries {
 			if node.Entry.IsFolder {
 				os.Mkdir(folderNameDownload+"/"+folderName+"/"+node.Entry.Name, os.ModePerm)
-				getChildren(node.Entry.ID, folderName+"/"+node.Entry.Name, 0, DefaultMaxItems)
+				getChildren(node.Entry.ID, folderName+"/"+node.Entry.Name, 0, viper.GetInt(nativestore.MaxItemsLabel))
 			} else {
 				wgDownload.Add(1)
 				go downloadContent(node.Entry.ID, folderName, node.Entry.Name)
@@ -61,7 +60,7 @@ var nodeDownloadFolderCmd = &cobra.Command{
 		var node Node
 		json.Unmarshal(response.Bytes(), &node)
 		os.Mkdir(folderNameDownload+"/"+node.Entry.Name, os.ModePerm)
-		getChildren(nodeId, node.Entry.Name, 0, DefaultMaxItems)
+		getChildren(nodeId, node.Entry.Name, 0, viper.GetInt(nativestore.MaxItemsLabel))
 
 		wgDownload.Wait()
 
