@@ -54,5 +54,6 @@ func init() {
 
 	RootCmd.PersistentFlags().StringVar(&UsernameParam, "username", "", "Alfresco Username (overrides default stored config value)")
 	RootCmd.PersistentFlags().StringVar(&PasswordParam, "password", "", "Alfresco Password for the Username (overrides default stored config value)")
+	RootCmd.MarkFlagsRequiredTogether("username", "password")
 	RootCmd.PersistentFlags().StringP("output", "o", "default", "Output format. E.g.: 'default', 'json' or 'id'.")
 }

@@ -18,7 +18,6 @@ import (
 const NodeUploadFolderCmdId string = "[NODE UPLOAD FOLDER]"
 
 var folderNameUpload string
-var outputResponseBody bytes.Buffer
 var wgUpload sync.WaitGroup
 var nodeUploadFolderCmd = &cobra.Command{
 	Use:   "upload-folder",
@@ -41,12 +40,13 @@ var nodeUploadFolderCmd = &cobra.Command{
 							if parentId == "" {
 								parentId = nodeId
 							}
-							response := CreateNode(parentId, info.Name(), TypeFolder, nil, nil, "")
+							var localResponseBody bytes.Buffer
+							CreateNode(parentId, info.Name(), TypeFolder, nil, nil, "", &localResponseBody)
 							var node Node
-							json.Unmarshal(response.Bytes(), &node)
+							json.Unmarshal(localResponseBody.Bytes(), &node)
 							tree[path] = node.Entry.ID
 							if folderNameUpload == path {
-								outputResponseBody = response
+								responseBody = localResponseBody
 							}
 							log.Println(NodeUploadFolderCmdId, "Folder "+path+" has been uploaded")
 						} else {
@@ -70,22 +70,27 @@ var nodeUploadFolderCmd = &cobra.Command{
 		if err != nil {
 			cmd.ExitWithError(NodeUploadFolderCmdId, err)
 		}
-		var format, _ = command.Flags().GetString("output")
-		outputNode(outputResponseBody.Bytes(), format)
+	},
+	PostRun: func(command *cobra.Command, args []string) {
 		log.Println(NodeUploadFolderCmdId,
 			"Uploaded local folder "+folderNameUpload+" to Alfresco Repository folder "+nodeId)
 	},
 }
 
 func createFile(parentId string, path string, info fs.DirEntry) {
-	response := CreateNode(parentId, info.Name(), TypeContent, nil, nil, path)
+	var localResponseBody bytes.Buffer
+	CreateNode(parentId, info.Name(), TypeContent, nil, nil, path, &localResponseBody)
 	var node Node
-	json.Unmarshal(response.Bytes(), &node)
+	json.Unmarshal(localResponseBody.Bytes(), &node)
 	log.Println(NodeUploadFolderCmdId, "File "+path+" has been uploaded")
 	wgUpload.Done()
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeUploadFolderCmd)
+	nodeUploadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository to upload local folder")
 	nodeUploadFolderCmd.Flags().StringVarP(&folderNameUpload, "directory", "d", "", "Local folder to be uploaded (complete or local path)")
+	nodeUploadFolderCmd.Flags().SortFlags = false
+	nodeUploadFolderCmd.MarkFlagRequired("nodeId")
+	nodeUploadFolderCmd.MarkFlagRequired("directory")
 }

@@ -13,15 +13,13 @@ import (
 
 const GetNodeCmdId string = "[NODE GET]"
 
-func GetNodeProperties(nodeId string) bytes.Buffer {
-
-	var responseBody bytes.Buffer
+func GetNodeProperties(nodeId string, responseBody *bytes.Buffer) {
 
 	execution := &httpclient.HttpExecution{
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Url:                nodeUrlPath + nodeId,
-		ResponseBodyOutput: &responseBody,
+		ResponseBodyOutput: responseBody,
 	}
 
 	_error := httpclient.Execute(execution)
@@ -29,7 +27,6 @@ func GetNodeProperties(nodeId string) bytes.Buffer {
 		cmd.ExitWithError(GetNodeCmdId, _error)
 	}
 
-	return responseBody
 }
 
 func GetNodeContent(
@@ -37,12 +34,14 @@ func GetNodeContent(
 	downloadFolderName string,
 	fileName string) {
 
+	var responseBodyContent bytes.Buffer
+
 	execution := &httpclient.HttpExecution{
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Data:               downloadFolderName + "/" + fileName,
 		Url:                nodeUrlPath + nodeId + "/content",
-		ResponseBodyOutput: &responseBody,
+		ResponseBodyOutput: &responseBodyContent,
 	}
 
 	_error := httpclient.ExecuteDownloadContent(execution)
@@ -58,10 +57,7 @@ var nodeGetCmd = &cobra.Command{
 	Short: "Get Node information (properties and content)",
 	Run: func(command *cobra.Command, args []string) {
 
-		responseBody := GetNodeProperties(nodeId)
-		var format, _ = command.Flags().GetString("output")
-		outputNode(responseBody.Bytes(), format)
-		log.Println(GetNodeCmdId, "Details for node "+nodeId+" have been retrieved")
+		GetNodeProperties(nodeId, &responseBody)
 
 		var node Node
 		json.Unmarshal(responseBody.Bytes(), &node)
@@ -72,9 +68,14 @@ var nodeGetCmd = &cobra.Command{
 		}
 
 	},
+	PostRun: func(command *cobra.Command, args []string) {
+		log.Println(GetNodeCmdId, "Details for node "+nodeId+" have been retrieved")
+	},
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeGetCmd)
+	nodeGetCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be retrieved.")
 	nodeGetCmd.Flags().StringVarP(&downloadFolderName, "directory", "d", "", "Folder to download the content (complete or local path). When empty, only properties are retrieved.")
+	nodeGetCmd.MarkFlagRequired("nodeId")
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 	"text/tabwriter"
 
 	"github.com/aborroy/alfresco-cli/cmd"
@@ -58,6 +59,20 @@ type NodeUpdate struct {
 	Properties  map[string](string) `json:"properties,omitempty"`
 }
 
+func output(data []byte, format string) {
+	if format == string(cmd.Json) {
+		fmt.Println(string(data[:]))
+	} else {
+		var nodeList NodeList
+		err := json.Unmarshal(data, &nodeList)
+		if err != nil || reflect.DeepEqual(nodeList, NodeList{}) {
+			outputNode(data, format)
+		} else {
+			outputNodeList(data, format, nodeList)
+		}
+	}
+}
+
 func outputNode(data []byte, format string) {
 
 	var node Node
@@ -68,30 +83,26 @@ func outputNode(data []byte, format string) {
 		fmt.Println(node.Entry.ID)
 	case string(cmd.Default):
 		json.Unmarshal(data, &node)
-		w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
-		fmt.Fprintln(w, "ID\tNAME\tMODIFIED AT\tUSER\t")
-		fmt.Fprintln(w, node.Entry.ID+"\t"+node.Entry.Name+"\t"+node.Entry.ModifiedAt+"\t"+node.Entry.ModifiedByUser.ID)
-		w.Flush()
-	case string(cmd.Json):
-		fmt.Println(string(data[:]))
+		if !reflect.DeepEqual(node, Node{}) {
+			w := tabwriter.NewWriter(os.Stdout, 1, 1, 1, ' ', 0)
+			fmt.Fprintln(w, "ID\tNAME\tMODIFIED AT\tUSER\t")
+			fmt.Fprintln(w, node.Entry.ID+"\t"+node.Entry.Name+"\t"+node.Entry.ModifiedAt+"\t"+node.Entry.ModifiedByUser.ID)
+			w.Flush()
+		}
 	default:
 		fmt.Println("Format '" + format + "' is not an option, allowed values are 'id', 'json' or 'default'")
 	}
 
 }
 
-func outputNodeList(data []byte, format string) {
-
-	var nodeList NodeList
+func outputNodeList(data []byte, format string, nodeList NodeList) {
 
 	switch format {
 	case string(cmd.Id):
-		json.Unmarshal(data, &nodeList)
 		for _, node := range nodeList.List.Entries {
 			fmt.Println(node.Entry.ID)
 		}
 	case string(cmd.Default):
-		json.Unmarshal(data, &nodeList)
 		w := tabwriter.NewWriter(os.Stdout, 1, 4, 1, ' ', 0)
 		fmt.Fprintln(w, "ID\tNAME\tMODIFIED AT\tUSER\t")
 		for _, node := range nodeList.List.Entries {
@@ -104,8 +115,6 @@ func outputNodeList(data []byte, format string) {
 			nodeList.List.Pagination.TotalItems,
 			nodeList.List.Pagination.SkipCount,
 			nodeList.List.Pagination.MaxItems)
-	case string(cmd.Json):
-		fmt.Println(string(data[:]))
 	default:
 		fmt.Println("Format '" + format + "' is not an option, allowed values are 'id', 'json' or 'default'")
 	}

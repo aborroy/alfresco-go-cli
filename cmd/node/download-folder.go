@@ -14,9 +14,9 @@ import (
 const NodeDownloadFolderCmdId string = "[NODE DOWNLOAD FOLDER]"
 
 func getChildren(folderId string, folderName string, skipCount int, maxItems int) {
-	response := ListNode(folderId, skipCount, maxItems)
+	ListNode(folderId, skipCount, maxItems, &responseBody)
 	var nodeList NodeList
-	json.Unmarshal(response.Bytes(), &nodeList)
+	json.Unmarshal(responseBody.Bytes(), &nodeList)
 	for _, node := range nodeList.List.Entries {
 		if node.Entry.IsFolder {
 			os.Mkdir(folderNameDownload+"/"+folderName+"/"+node.Entry.Name, os.ModePerm)
@@ -30,9 +30,9 @@ func getChildren(folderId string, folderName string, skipCount int, maxItems int
 	var hasMoreItems bool = nodeList.List.Pagination.HasMoreItems
 	for hasMoreItems {
 		skipCount = skipCount + maxItems
-		response := ListNode(folderId, skipCount, maxItems)
+		ListNode(folderId, skipCount, maxItems, &responseBody)
 		var nodeList NodeList
-		json.Unmarshal(response.Bytes(), &nodeList)
+		json.Unmarshal(responseBody.Bytes(), &nodeList)
 		for _, node := range nodeList.List.Entries {
 			if node.Entry.IsFolder {
 				os.Mkdir(folderNameDownload+"/"+folderName+"/"+node.Entry.Name, os.ModePerm)
@@ -56,14 +56,16 @@ var nodeDownloadFolderCmd = &cobra.Command{
 		log.Println(NodeUploadFolderCmdId,
 			"Downloading Alfresco folder "+nodeId+" to local folder "+folderNameDownload)
 
-		var response = GetNodeProperties(nodeId)
+		GetNodeProperties(nodeId, &responseBody)
 		var node Node
-		json.Unmarshal(response.Bytes(), &node)
+		json.Unmarshal(responseBody.Bytes(), &node)
 		os.Mkdir(folderNameDownload+"/"+node.Entry.Name, os.ModePerm)
 		getChildren(nodeId, node.Entry.Name, 0, viper.GetInt(nativestore.MaxItemsLabel))
 
 		wgDownload.Wait()
 
+	},
+	PostRun: func(command *cobra.Command, args []string) {
 		log.Println(NodeUploadFolderCmdId,
 			"Downloaded Alfresco folder "+nodeId+" to local folder "+folderNameDownload)
 	},
@@ -77,5 +79,7 @@ func downloadContent(nodeId string, folderName string, fileName string) {
 
 func init() {
 	nodeCmd.AddCommand(nodeDownloadFolderCmd)
+	nodeDownloadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to download to local folder")
 	nodeDownloadFolderCmd.Flags().StringVarP(&folderNameDownload, "directory", "d", "", "Folder to download Alfresco content")
+	nodeDownloadFolderCmd.MarkFlagRequired("nodeId")
 }

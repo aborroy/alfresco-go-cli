@@ -20,20 +20,13 @@ func CreateNode(
 	nodeType string,
 	aspects []string,
 	properties []string,
-	fileName string) bytes.Buffer {
-
-	var responseBody bytes.Buffer
+	fileName string,
+	responseBody *bytes.Buffer) {
 
 	var nodeCreate NodeUpdate
-	if nodeName != "" {
-		nodeCreate.Name = nodeName
-	}
-	if nodeType != "" {
-		nodeCreate.NodeType = nodeType
-	}
-	if aspects != nil {
-		nodeCreate.AspectNames = aspects
-	}
+	nodeCreate.Name = nodeName
+	nodeCreate.NodeType = nodeType
+	nodeCreate.AspectNames = aspects
 	if properties != nil {
 		m := make(map[string](string))
 		for _, property := range properties {
@@ -49,7 +42,7 @@ func CreateNode(
 		Data:               string(jsonNodeCreate),
 		Format:             httpclient.Json,
 		Url:                nodeUrlPath + nodeId + "/children",
-		ResponseBodyOutput: &responseBody,
+		ResponseBodyOutput: responseBody,
 	}
 
 	_error := httpclient.Execute(execution)
@@ -73,30 +66,41 @@ func CreateNode(
 		if _error != nil {
 			cmd.ExitWithError(CreateNodeCmdId, _error)
 		}
-		return responseBodyContent
-	} else {
-		return responseBody
 	}
 }
 
+var nodeNameCreate string
+var nodeTypeCreate string
+var aspectsCreate []string
+var propertiesCreate []string
 var fileNameCreate string
 var nodeCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create new Node",
 	Run: func(command *cobra.Command, args []string) {
-		response := CreateNode(nodeId, nodeName, nodeType, aspects, properties, fileNameCreate)
-		var format, _ = command.Flags().GetString("output")
-		outputNode(response.Bytes(), format)
+		CreateNode(nodeId,
+			nodeNameCreate,
+			nodeTypeCreate,
+			aspectsCreate,
+			propertiesCreate,
+			fileNameCreate,
+			&responseBody)
+	},
+	PostRun: func(command *cobra.Command, args []string) {
 		log.Println(CreateNodeCmdId, "Node "+nodeName+" has been created under "+nodeId)
 	},
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeCreateCmd)
-	nodeCreateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "Node Name")
-	nodeCreateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Node Type")
-	nodeCreateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
-	nodeCreateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
+	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository. The node is created under this Parent Node.")
+	nodeCreateCmd.Flags().StringVarP(&nodeNameCreate, "name", "n", "", "Node Name")
+	nodeCreateCmd.Flags().StringVarP(&nodeTypeCreate, "type", "t", "", "Node Type")
+	nodeCreateCmd.Flags().StringArrayVarP(&aspectsCreate, "aspects", "a", nil, "Complete aspect list to be set")
+	nodeCreateCmd.Flags().StringArrayVarP(&propertiesCreate, "properties", "p", nil, "Property=Value list containing properties to be updated")
 	nodeCreateCmd.Flags().StringVarP(&fileNameCreate, "file", "f", "", "Filename to be uploaded (complete or local path)")
 	nodeCreateCmd.Flags().SortFlags = false
+	nodeCreateCmd.MarkFlagRequired("nodeId")
+	nodeCreateCmd.MarkFlagRequired("name")
+	nodeCreateCmd.MarkFlagRequired("type")
 }

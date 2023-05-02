@@ -25,10 +25,14 @@ var nodeDeleteCmd = &cobra.Command{
 		if _error != nil {
 			cmd.ExitWithError(DeleteNodeCmdId, _error)
 		}
+	},
+	PostRun: func(command *cobra.Command, args []string) {
 		log.Println(DeleteNodeCmdId, "Node "+nodeId+" has been deleted")
 	},
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeDeleteCmd)
+	nodeDeleteCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be deleted.")
+	nodeDeleteCmd.MarkFlagRequired("nodeId")
 }

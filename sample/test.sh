@@ -24,7 +24,7 @@ NEW_NODE_ID=$($ALF node create -n file.txt \
 -i $SHARED_ID \
 -t cm:content -p cm:title="Title" -p cm:description="Description" \
 -f file.txt | grep file.txt | awk -F ' ' '{print $1}')
-echo "Created new node under folder with NodeId: $SHARED_ID"
+echo "Created new node $NEW_NODE_ID under folder with NodeId: $SHARED_ID"
 
 # Remove sample file
 rm -rf file.txt

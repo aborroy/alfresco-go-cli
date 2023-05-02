@@ -25,15 +25,9 @@ var nodeUpdateCmd = &cobra.Command{
 	Run: func(command *cobra.Command, args []string) {
 
 		var nodeUpdate NodeUpdate
-		if nodeName != "" {
-			nodeUpdate.Name = nodeName
-		}
-		if nodeType != "" {
-			nodeUpdate.NodeType = nodeType
-		}
-		if aspects != nil {
-			nodeUpdate.AspectNames = aspects
-		}
+		nodeUpdate.Name = nodeName
+		nodeUpdate.NodeType = nodeType
+		nodeUpdate.AspectNames = aspects
 		if properties != nil {
 			m := make(map[string](string))
 			for _, property := range properties {
@@ -57,11 +51,6 @@ var nodeUpdateCmd = &cobra.Command{
 			cmd.ExitWithError(NodeUpdateCmdId, _error)
 		}
 
-		var format, _ = command.Flags().GetString("output")
-		outputNode(responseBody.Bytes(), format)
-
-		log.Println(NodeUpdateCmdId, "Node "+nodeName+" has been updated")
-
 		if fileNameUpdate != "" {
 			var node Node
 			json.Unmarshal(responseBody.Bytes(), &node)
@@ -81,14 +70,19 @@ var nodeUpdateCmd = &cobra.Command{
 		}
 
 	},
+	PostRun: func(command *cobra.Command, args []string) {
+		log.Println(NodeUpdateCmdId, "Node "+nodeName+" has been updated")
+	},
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeUpdateCmd)
+	nodeUpdateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be updated.")
 	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "Change Node Name")
 	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Change Node Type")
 	nodeUpdateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
 	nodeUpdateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
 	nodeUpdateCmd.Flags().StringVarP(&fileNameUpdate, "file", "f", "", "Filename to be uploaded (complete or local path)")
 	nodeUpdateCmd.Flags().SortFlags = false
+	nodeUpdateCmd.MarkFlagRequired("nodeId")
 }
