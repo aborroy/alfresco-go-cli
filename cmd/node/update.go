@@ -24,6 +24,10 @@ var nodeUpdateCmd = &cobra.Command{
 	Short: "Update Node information",
 	Run: func(command *cobra.Command, args []string) {
 
+		if relativePath != "" {
+			nodeId = GetNodeId(nodeId, relativePath)
+		}
+
 		var nodeUpdate NodeUpdate
 		nodeUpdate.Name = nodeName
 		nodeUpdate.NodeType = nodeType
@@ -78,6 +82,7 @@ var nodeUpdateCmd = &cobra.Command{
 func init() {
 	nodeCmd.AddCommand(nodeUpdateCmd)
 	nodeUpdateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be updated.")
+	nodeUpdateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "Change Node Name")
 	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Change Node Type")
 	nodeUpdateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")

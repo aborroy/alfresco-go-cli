@@ -2,6 +2,7 @@ package node
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/url"
 
 	"github.com/aborroy/alfresco-cli/cmd"
@@ -14,6 +15,14 @@ func GetUrlParams(params map[string]string) url.Values {
 		parameters.Add(key, value)
 	}
 	return parameters
+}
+
+func GetNodeId(rootNodeId string, relativePath string) string {
+	var responseBodyNodeId bytes.Buffer
+	GetNodeProperties(rootNodeId, relativePath, &responseBodyNodeId)
+	var node Node
+	json.Unmarshal(responseBodyNodeId.Bytes(), &node)
+	return node.Entry.ID
 }
 
 var nodeId string

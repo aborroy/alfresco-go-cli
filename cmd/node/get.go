@@ -13,7 +13,10 @@ import (
 
 const GetNodeCmdId string = "[NODE GET]"
 
-func GetNodeProperties(nodeId string, responseBody *bytes.Buffer) {
+func GetNodeProperties(
+	nodeId string,
+	relativePath string,
+	responseBody *bytes.Buffer) {
 
 	var params = make(map[string]string)
 	if relativePath != "" {
@@ -63,7 +66,7 @@ var nodeGetCmd = &cobra.Command{
 	Short: "Get Node information (properties and content)",
 	Run: func(command *cobra.Command, args []string) {
 
-		GetNodeProperties(nodeId, &responseBody)
+		GetNodeProperties(nodeId, relativePath, &responseBody)
 
 		var node Node
 		json.Unmarshal(responseBody.Bytes(), &node)

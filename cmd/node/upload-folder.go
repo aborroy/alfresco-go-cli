@@ -23,8 +23,14 @@ var nodeUploadFolderCmd = &cobra.Command{
 	Use:   "upload-folder",
 	Short: "Upload local folder to Alfresco Repository",
 	Run: func(command *cobra.Command, args []string) {
+
+		if relativePath != "" {
+			nodeId = GetNodeId(nodeId, relativePath)
+		}
+
 		log.Println(NodeUploadFolderCmdId,
 			"Uploading local folder "+folderNameUpload+" to Alfresco Repository folder "+nodeId)
+
 		tree := make(map[string]string)
 		var hiddenPaths []string
 		err := filepath.WalkDir(folderNameUpload,
@@ -89,6 +95,7 @@ func createFile(parentId string, path string, info fs.DirEntry) {
 func init() {
 	nodeCmd.AddCommand(nodeUploadFolderCmd)
 	nodeUploadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository to upload local folder")
+	nodeUploadFolderCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeUploadFolderCmd.Flags().StringVarP(&folderNameUpload, "directory", "d", "", "Local folder to be uploaded (complete or local path)")
 	nodeUploadFolderCmd.Flags().SortFlags = false
 	nodeUploadFolderCmd.MarkFlagRequired("nodeId")

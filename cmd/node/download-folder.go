@@ -64,7 +64,7 @@ var nodeDownloadFolderCmd = &cobra.Command{
 		log.Println(NodeUploadFolderCmdId,
 			"Downloading Alfresco folder "+nodeId+"/"+relativePath+" to local folder "+folderNameDownload)
 
-		GetNodeProperties(nodeId, &responseBody)
+		GetNodeProperties(nodeId, relativePath, &responseBody)
 		var node Node
 		json.Unmarshal(responseBody.Bytes(), &node)
 		os.Mkdir(folderNameDownload+"/"+node.Entry.Name, os.ModePerm)

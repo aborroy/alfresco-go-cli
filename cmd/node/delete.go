@@ -15,6 +15,9 @@ var nodeDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete Node",
 	Run: func(command *cobra.Command, args []string) {
+		if relativePath != "" {
+			nodeId = GetNodeId(nodeId, relativePath)
+		}
 		execution := &httpclient.HttpExecution{
 			Method:             http.MethodDelete,
 			Format:             httpclient.None,
@@ -34,5 +37,6 @@ var nodeDeleteCmd = &cobra.Command{
 func init() {
 	nodeCmd.AddCommand(nodeDeleteCmd)
 	nodeDeleteCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be deleted.")
+	nodeDeleteCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeDeleteCmd.MarkFlagRequired("nodeId")
 }
