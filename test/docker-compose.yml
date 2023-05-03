@@ -1,0 +1,82 @@
+version: "2"
+services:
+  alfresco:
+    image: docker.io/alfresco/alfresco-content-repository-community:7.3.1
+    mem_limit: 3200m
+    environment:
+      JAVA_TOOL_OPTIONS: >-
+        -Dencryption.keystore.type=JCEKS
+        -Dencryption.cipherAlgorithm=DESede/CBC/PKCS5Padding
+        -Dencryption.keyAlgorithm=DESede
+        -Dencryption.keystore.location=/usr/local/tomcat/shared/classes/alfresco/extension/keystore/keystore
+        -Dmetadata-keystore.password=mp6yc0UD9e
+        -Dmetadata-keystore.aliases=metadata
+        -Dmetadata-keystore.metadata.password=oKIWzVdEdA
+        -Dmetadata-keystore.metadata.algorithm=DESede
+      JAVA_OPTS: >-
+        -Ddb.driver=org.postgresql.Driver
+        -Ddb.username=alfresco
+        -Ddb.password=alfresco
+        -Ddb.url=jdbc:postgresql://postgres:5432/alfresco
+        -Dsolr.host=solr6
+        -Dsolr.port=8983
+        -Dsolr.http.connection.timeout=1000
+        -Dsolr.secureComms=secret
+        -Dsolr.sharedSecret=secret
+        -Dsolr.base.url=/solr
+        -Dindex.subsystem.name=solr6
+        -Dshare.host=127.0.0.1
+        -Dshare.port=8080
+        -Dalfresco.host=localhost
+        -Dalfresco.port=8080
+        -Dcsrf.filter.enabled=false
+        -Daos.baseUrlOverwrite=http://localhost:8080/alfresco/aos
+        -Dmessaging.broker.url="failover:(nio://activemq:61616)?timeout=3000&jms.useCompression=true"
+        -Ddeployment.method=DOCKER_COMPOSE
+        -DlocalTransform.core-aio.url=http://transform-core-aio:8090/
+        -XX:MinRAMPercentage=50
+        -XX:MaxRAMPercentage=80
+  transform-core-aio:
+    image: alfresco/alfresco-transform-core-aio:3.0.0
+    mem_limit: 1536m
+    environment:
+      JAVA_OPTS: " -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
+  postgres:
+    image: postgres:14.4
+    mem_limit: 512m
+    environment:
+      - POSTGRES_PASSWORD=alfresco
+      - POSTGRES_USER=alfresco
+      - POSTGRES_DB=alfresco
+    command: postgres -c max_connections=300 -c log_min_messages=LOG
+  solr6:
+    image: docker.io/alfresco/alfresco-search-services:2.0.6
+    mem_limit: 1024m
+    environment:
+      SOLR_ALFRESCO_HOST: "alfresco"
+      SOLR_ALFRESCO_PORT: "8080"
+      SOLR_SOLR_HOST: "solr6"
+      SOLR_SOLR_PORT: "8983"
+      SOLR_CREATE_ALFRESCO_DEFAULTS: "alfresco,archive"
+      ALFRESCO_SECURE_COMMS: "secret"
+      JAVA_TOOL_OPTIONS: >-
+        -Dalfresco.secureComms.secret=secret
+  activemq:
+    image: alfresco/alfresco-activemq:5.17.1-jre11-rockylinux8
+    mem_limit: 1g
+  proxy:
+    image: alfresco/alfresco-acs-nginx:3.4.2
+    mem_limit: 128m
+    environment:
+      DISABLE_PROMETHEUS: "true"
+      DISABLE_SYNCSERVICE: "true"
+      DISABLE_ADW: "true"
+      DISABLE_CONTROL_CENTER: "true"
+      DISABLE_SHARE: "true"
+      ENABLE_CONTENT_APP: "false"
+    depends_on:
+      - alfresco
+    ports:
+      - "8080:8080"
+    links:
+      - alfresco

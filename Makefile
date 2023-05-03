@@ -4,9 +4,11 @@ LINUX=$(EXECUTABLE)_linux_amd64
 DARWIN=$(EXECUTABLE)_darwin_arm64
 VERSION=$(shell git describe --tags --always --long --dirty)
 
-all: build
+.PHONY: all test clean
 
-build: windows linux darwin
+all: test build
+
+build: test windows linux darwin
 	@echo version: $(VERSION)
 
 windows: $(WINDOWS) 
@@ -24,5 +26,9 @@ $(LINUX):
 $(DARWIN):
 	env GOOS=darwin GOARCH=arm64 go build -v -o $(DARWIN) -ldflags="-s -w -X main.version=$(VERSION)"  ./alfresco.go
 
-clean: 
+test:
+	cd test && ./test_node.sh
+
+clean:
+	go clean
 	rm -f $(WINDOWS) $(LINUX) $(DARWIN)

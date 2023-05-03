@@ -84,19 +84,19 @@ var nodeUploadFolderCmd = &cobra.Command{
 }
 
 func createFile(parentId string, path string, info fs.DirEntry) {
+	defer wgUpload.Done()
 	var localResponseBody bytes.Buffer
 	CreateNode(parentId, info.Name(), TypeContent, "", nil, nil, path, &localResponseBody)
 	var node Node
 	json.Unmarshal(localResponseBody.Bytes(), &node)
 	log.Println(NodeUploadFolderCmdId, "File "+path+" has been uploaded")
-	wgUpload.Done()
 }
 
 func init() {
 	nodeCmd.AddCommand(nodeUploadFolderCmd)
 	nodeUploadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository to upload local folder")
 	nodeUploadFolderCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
-	nodeUploadFolderCmd.Flags().StringVarP(&folderNameUpload, "directory", "d", "", "Local folder to be uploaded (complete or local path)")
+	nodeUploadFolderCmd.Flags().StringVarP(&folderNameUpload, "directory", "d", "", "Local folder to be uploaded (complete path)")
 	nodeUploadFolderCmd.Flags().SortFlags = false
 	nodeUploadFolderCmd.MarkFlagRequired("nodeId")
 	nodeUploadFolderCmd.MarkFlagRequired("directory")

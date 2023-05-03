@@ -49,9 +49,9 @@ func getChildren(folderId string, folderName string, relativePath string, skipCo
 }
 
 func downloadContent(nodeId string, folderName string, fileName string) {
+	defer wgDownload.Done()
 	GetNodeContent(nodeId, folderName, fileName)
 	log.Println(NodeUploadFolderCmdId, "File "+folderName+"/"+fileName+" has been downloaded")
-	wgDownload.Done()
 }
 
 var folderNameDownload string

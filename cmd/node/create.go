@@ -90,7 +90,7 @@ var nodeCreateCmd = &cobra.Command{
 			&responseBody)
 	},
 	PostRun: func(command *cobra.Command, args []string) {
-		log.Println(CreateNodeCmdId, "Node "+nodeName+" has been created under "+nodeId)
+		log.Println(CreateNodeCmdId, "Node "+nodeNameCreate+" has been created under "+nodeId)
 	},
 }
 
