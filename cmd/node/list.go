@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"log"
 	"net/http"
-	"net/url"
 	"strconv"
 
 	"github.com/aborroy/alfresco-cli/cmd"
@@ -18,19 +17,23 @@ const NodeChildrenCmdId string = "[NODE LIST]"
 
 func ListNode(
 	nodeId string,
+	relativePath string,
 	skipCount int,
 	maxItems int,
 	responseBody *bytes.Buffer) {
 
-	params := url.Values{}
-	params.Add("skipCount", strconv.Itoa(skipCount))
-	params.Add("maxItems", strconv.Itoa(maxItems))
+	var params = make(map[string]string)
+	if relativePath != "" {
+		params["relativePath"] = relativePath
+	}
+	params["skipCount"] = strconv.Itoa(skipCount)
+	params["maxItems"] = strconv.Itoa(maxItems)
 
 	execution := &httpclient.HttpExecution{
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Url:                nodeUrlPath + nodeId + "/children",
-		Parameters:         params,
+		Parameters:         GetUrlParams(params),
 		ResponseBodyOutput: responseBody,
 	}
 
@@ -50,7 +53,7 @@ var nodeChildrenCmd = &cobra.Command{
 		if maxItems == -1 {
 			maxItems = viper.GetInt(nativestore.MaxItemsLabel)
 		}
-		ListNode(nodeId, skipCount, maxItems, &responseBody)
+		ListNode(nodeId, relativePath, skipCount, maxItems, &responseBody)
 	},
 	PostRun: func(command *cobra.Command, args []string) {
 		log.Println(NodeChildrenCmdId, "Details for children nodes of "+nodeId+" have been retrieved")
@@ -60,6 +63,7 @@ var nodeChildrenCmd = &cobra.Command{
 func init() {
 	nodeCmd.AddCommand(nodeChildrenCmd)
 	nodeChildrenCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to get children nodes")
+	nodeChildrenCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeChildrenCmd.Flags().IntVar(&skipCount, "skipCount", 0, "Skip a number of initial nodes from the list")
 	nodeChildrenCmd.Flags().IntVar(&maxItems, "maxItems", -1, "Maximum number of nodes in the response list (max. 1000)")
 	nodeChildrenCmd.Flags().SortFlags = false

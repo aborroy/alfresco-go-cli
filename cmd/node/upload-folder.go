@@ -41,7 +41,7 @@ var nodeUploadFolderCmd = &cobra.Command{
 								parentId = nodeId
 							}
 							var localResponseBody bytes.Buffer
-							CreateNode(parentId, info.Name(), TypeFolder, nil, nil, "", &localResponseBody)
+							CreateNode(parentId, info.Name(), TypeFolder, "", nil, nil, "", &localResponseBody)
 							var node Node
 							json.Unmarshal(localResponseBody.Bytes(), &node)
 							tree[path] = node.Entry.ID
@@ -79,7 +79,7 @@ var nodeUploadFolderCmd = &cobra.Command{
 
 func createFile(parentId string, path string, info fs.DirEntry) {
 	var localResponseBody bytes.Buffer
-	CreateNode(parentId, info.Name(), TypeContent, nil, nil, path, &localResponseBody)
+	CreateNode(parentId, info.Name(), TypeContent, "", nil, nil, path, &localResponseBody)
 	var node Node
 	json.Unmarshal(localResponseBody.Bytes(), &node)
 	log.Println(NodeUploadFolderCmdId, "File "+path+" has been uploaded")

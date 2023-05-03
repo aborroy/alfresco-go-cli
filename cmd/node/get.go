@@ -15,10 +15,16 @@ const GetNodeCmdId string = "[NODE GET]"
 
 func GetNodeProperties(nodeId string, responseBody *bytes.Buffer) {
 
+	var params = make(map[string]string)
+	if relativePath != "" {
+		params["relativePath"] = relativePath
+	}
+
 	execution := &httpclient.HttpExecution{
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Url:                nodeUrlPath + nodeId,
+		Parameters:         GetUrlParams(params),
 		ResponseBodyOutput: responseBody,
 	}
 
@@ -76,6 +82,7 @@ var nodeGetCmd = &cobra.Command{
 func init() {
 	nodeCmd.AddCommand(nodeGetCmd)
 	nodeGetCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be retrieved.")
+	nodeGetCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeGetCmd.Flags().StringVarP(&downloadFolderName, "directory", "d", "", "Folder to download the content (complete or local path). When empty, only properties are retrieved.")
 	nodeGetCmd.MarkFlagRequired("nodeId")
 }

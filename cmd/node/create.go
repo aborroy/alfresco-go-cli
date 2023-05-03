@@ -18,6 +18,7 @@ func CreateNode(
 	nodeId string,
 	nodeName string,
 	nodeType string,
+	relativePath string,
 	aspects []string,
 	properties []string,
 	fileName string,
@@ -26,6 +27,7 @@ func CreateNode(
 	var nodeCreate NodeUpdate
 	nodeCreate.Name = nodeName
 	nodeCreate.NodeType = nodeType
+	nodeCreate.RelativePath = relativePath
 	nodeCreate.AspectNames = aspects
 	if properties != nil {
 		m := make(map[string](string))
@@ -81,6 +83,7 @@ var nodeCreateCmd = &cobra.Command{
 		CreateNode(nodeId,
 			nodeNameCreate,
 			nodeTypeCreate,
+			relativePath,
 			aspectsCreate,
 			propertiesCreate,
 			fileNameCreate,
@@ -94,6 +97,7 @@ var nodeCreateCmd = &cobra.Command{
 func init() {
 	nodeCmd.AddCommand(nodeCreateCmd)
 	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository. The node is created under this Parent Node.")
+	nodeCreateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
 	nodeCreateCmd.Flags().StringVarP(&nodeNameCreate, "name", "n", "", "Node Name")
 	nodeCreateCmd.Flags().StringVarP(&nodeTypeCreate, "type", "t", "", "Node Type")
 	nodeCreateCmd.Flags().StringArrayVarP(&aspectsCreate, "aspects", "a", nil, "Complete aspect list to be set")

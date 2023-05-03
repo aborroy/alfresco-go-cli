@@ -53,10 +53,11 @@ type NodeList struct {
 }
 
 type NodeUpdate struct {
-	Name        string              `json:"name,omitempty"`
-	NodeType    string              `json:"nodeType,omitempty"`
-	AspectNames []string            `json:"aspectNames,omitempty"`
-	Properties  map[string](string) `json:"properties,omitempty"`
+	Name         string              `json:"name,omitempty"`
+	NodeType     string              `json:"nodeType,omitempty"`
+	RelativePath string              `json:"relativePath,omitempty"`
+	AspectNames  []string            `json:"aspectNames,omitempty"`
+	Properties   map[string](string) `json:"properties,omitempty"`
 }
 
 func output(data []byte, format string) {

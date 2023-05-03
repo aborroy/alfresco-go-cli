@@ -173,9 +173,9 @@ Sample bash script for testing purposes is provided in [sample/test.sh](sample/t
 
 ## TODO
 
-* Get node by path
 * Control concurrency rate
 * [Generate documentation automatically](https://github.com/spf13/cobra/blob/main/doc/md_docs.md)
+* Automated testing
 * Provide pre-built programs for Windows, Linux, Mac AMD64 & Mac ARM64
 * Site commands
 * Person commands
