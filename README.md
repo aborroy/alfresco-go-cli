@@ -167,9 +167,9 @@ a8e32ff6-6140-4a19-84a5-c157820fc376
 308b599d-6653-4190-aee3-18e6a0f7e9fd
 ```
 
-## Sample script
+## Testing and sample scripts
 
-Sample bash script for testing purposes is provided in [sample/test.sh](sample/test.sh) file.
+Sample bash scripts for testing purposes are provided in [test](test) folder.
 
 ## TODO
 
