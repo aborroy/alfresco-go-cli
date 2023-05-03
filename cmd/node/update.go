@@ -81,10 +81,10 @@ var nodeUpdateCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeUpdateCmd)
-	nodeUpdateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be updated.")
-	nodeUpdateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
-	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "Change Node Name")
-	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Change Node Type")
+	nodeUpdateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be updated. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeUpdateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
+	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "New Node Name")
+	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "New Node Type")
 	nodeUpdateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
 	nodeUpdateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
 	nodeUpdateCmd.Flags().StringVarP(&fileNameUpdate, "file", "f", "", "Filename to be uploaded (complete or local path)")

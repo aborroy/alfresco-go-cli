@@ -62,8 +62,8 @@ var nodeChildrenCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeChildrenCmd)
-	nodeChildrenCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to get children nodes")
-	nodeChildrenCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
+	nodeChildrenCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to get children nodes. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeChildrenCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
 	nodeChildrenCmd.Flags().IntVar(&skipCount, "skipCount", 0, "Skip a number of initial nodes from the list")
 	nodeChildrenCmd.Flags().IntVar(&maxItems, "maxItems", -1, "Maximum number of nodes in the response list (max. 1000)")
 	nodeChildrenCmd.Flags().SortFlags = false

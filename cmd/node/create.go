@@ -96,8 +96,8 @@ var nodeCreateCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeCreateCmd)
-	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository. The node is created under this Parent Node.")
-	nodeCreateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
+	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository. The node is created under this Parent Node. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeCreateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
 	nodeCreateCmd.Flags().StringVarP(&nodeNameCreate, "name", "n", "", "Node Name")
 	nodeCreateCmd.Flags().StringVarP(&nodeTypeCreate, "type", "t", "", "Node Type")
 	nodeCreateCmd.Flags().StringArrayVarP(&aspectsCreate, "aspects", "a", nil, "Complete aspect list to be set")

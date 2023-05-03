@@ -36,7 +36,7 @@ var nodeDeleteCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeDeleteCmd)
-	nodeDeleteCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be deleted.")
-	nodeDeleteCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
+	nodeDeleteCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be deleted. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeDeleteCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
 	nodeDeleteCmd.MarkFlagRequired("nodeId")
 }

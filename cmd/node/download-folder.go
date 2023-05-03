@@ -81,8 +81,8 @@ var nodeDownloadFolderCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeDownloadFolderCmd)
-	nodeDownloadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to download to local folder")
-	nodeDownloadFolderCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path relative to the nodeId.")
+	nodeDownloadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to download to local folder. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeDownloadFolderCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
 	nodeDownloadFolderCmd.Flags().StringVarP(&folderNameDownload, "directory", "d", "", "Folder to download Alfresco content")
 	nodeDownloadFolderCmd.MarkFlagRequired("nodeId")
 }
