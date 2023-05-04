@@ -63,7 +63,10 @@ func GetNodeContent(
 var downloadFolderName string
 var nodeGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Get Node information (properties and content)",
+	Short: "Get Node information (properties and content) from repository",
+	Long: `Metadata and content of a Node is downloaded. 
+Metadata is provided as output of the command.
+Content is retrieved optionally (only when "d" flag is populated).`,
 	Run: func(command *cobra.Command, args []string) {
 
 		GetNodeProperties(nodeId, relativePath, &responseBody)

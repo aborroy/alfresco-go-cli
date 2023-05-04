@@ -13,7 +13,9 @@ const ConfigDeleteCmdId string = "[CONFIG DELETE]"
 
 var configDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Connection details removal",
+	Short: "ACS connection details removal",
+	Long: `ACS Client configuration is removed from local ".alfresco" file.
+Credentials (username and password) are removed from Native Store.`,
 	Run: func(command *cobra.Command, args []string) {
 		storedServer := viper.GetString(nativestore.UrlLabel)
 		_err := nativestore.Delete(storedServer)

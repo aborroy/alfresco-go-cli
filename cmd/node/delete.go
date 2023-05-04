@@ -13,7 +13,9 @@ const DeleteNodeCmdId string = "[NODE DELETE]"
 
 var nodeDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete Node",
+	Short: "Delete a Node existing in the repository",
+	Long: `Removes an existing node from the repository.
+Both metadata and content resources are removed.`,
 	Run: func(command *cobra.Command, args []string) {
 		if relativePath != "" {
 			nodeId = GetNodeId(nodeId, relativePath)

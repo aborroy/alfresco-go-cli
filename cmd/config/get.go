@@ -14,7 +14,9 @@ const ConfigGetCmdId string = "[CONFIG GET]"
 
 var configGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Get connection details",
+	Short: "Get ACS connection details",
+	Long: `ACS Client configuration and credentials are retrieved.
+The access to the Native Store may require typing OS credentials.`,
 	Run: func(command *cobra.Command, args []string) {
 		storedServer := viper.GetString(nativestore.UrlLabel)
 		username, password, _err := nativestore.Get(storedServer)

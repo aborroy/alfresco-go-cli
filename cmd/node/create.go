@@ -78,7 +78,10 @@ var propertiesCreate []string
 var fileNameCreate string
 var nodeCreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create new Node",
+	Short: "Create new Node in ACS Repository",
+	Long: `Creates a new node as children of a parent node in the repository.
+The node can be created setting only metadata (name, type, aspects and properties) or
+a local file can be also specified to be associated as the content of the new node.`,
 	Run: func(command *cobra.Command, args []string) {
 		CreateNode(nodeId,
 			nodeNameCreate,
@@ -96,12 +99,12 @@ var nodeCreateCmd = &cobra.Command{
 
 func init() {
 	nodeCmd.AddCommand(nodeCreateCmd)
-	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository. The node is created under this Parent Node. You can also use one of these well-known aliases: -my-, -shared-, -root-")
-	nodeCreateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
-	nodeCreateCmd.Flags().StringVarP(&nodeNameCreate, "name", "n", "", "Node Name")
-	nodeCreateCmd.Flags().StringVarP(&nodeTypeCreate, "type", "t", "", "Node Type")
-	nodeCreateCmd.Flags().StringArrayVarP(&aspectsCreate, "aspects", "a", nil, "Complete aspect list to be set")
-	nodeCreateCmd.Flags().StringArrayVarP(&propertiesCreate, "properties", "p", nil, "Property=Value list containing properties to be updated")
+	nodeCreateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Parent Node Id in Alfresco Repository (commonly a folder node). The node is created under this Parent Node. You can also use one of these well-known aliases: -my-, -shared-, -root-")
+	nodeCreateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId for the Parent Node.")
+	nodeCreateCmd.Flags().StringVarP(&nodeNameCreate, "name", "n", "", "New Node Name")
+	nodeCreateCmd.Flags().StringVarP(&nodeTypeCreate, "type", "t", "", "New Node Type")
+	nodeCreateCmd.Flags().StringArrayVarP(&aspectsCreate, "aspects", "a", nil, "Complete aspect list to be set for the New Node")
+	nodeCreateCmd.Flags().StringArrayVarP(&propertiesCreate, "properties", "p", nil, "Property=Value list containing properties to be created for the New Node")
 	nodeCreateCmd.Flags().StringVarP(&fileNameCreate, "file", "f", "", "Filename to be uploaded (complete or local path)")
 	nodeCreateCmd.Flags().SortFlags = false
 	nodeCreateCmd.MarkFlagRequired("nodeId")

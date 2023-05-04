@@ -21,7 +21,11 @@ var properties []string
 var fileNameUpdate string
 var nodeUpdateCmd = &cobra.Command{
 	Use:   "update",
-	Short: "Update Node information",
+	Short: "Update Node information in the repository",
+	Long: `Updates an existing node in the repository.
+The node can be updating setting only modified metadata (name, type and properties) but
+to modify "aspects" the full list of "aspects" to be set to the node is required.
+A local file can be also specified to be replace the content of the new node.`,
 	Run: func(command *cobra.Command, args []string) {
 
 		if relativePath != "" {
@@ -83,8 +87,8 @@ func init() {
 	nodeCmd.AddCommand(nodeUpdateCmd)
 	nodeUpdateCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to be updated. You can also use one of these well-known aliases: -my-, -shared-, -root-")
 	nodeUpdateCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
-	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "New Node Name")
-	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "New Node Type")
+	nodeUpdateCmd.Flags().StringVarP(&nodeName, "name", "n", "", "Updated Node Name")
+	nodeUpdateCmd.Flags().StringVarP(&nodeType, "type", "t", "", "Updated Node Type")
 	nodeUpdateCmd.Flags().StringArrayVarP(&aspects, "aspects", "a", nil, "Complete aspect list to be set")
 	nodeUpdateCmd.Flags().StringArrayVarP(&properties, "properties", "p", nil, "Property=Value list containing properties to be updated")
 	nodeUpdateCmd.Flags().StringVarP(&fileNameUpdate, "file", "f", "", "Filename to be uploaded (complete or local path)")

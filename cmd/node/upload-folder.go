@@ -22,6 +22,8 @@ var wgUpload sync.WaitGroup
 var nodeUploadFolderCmd = &cobra.Command{
 	Use:   "upload-folder",
 	Short: "Upload local folder to Alfresco Repository",
+	Long: `Folders and files from local folder are retrieved recursively.
+Only content (folders and files) is uploaded, but only basic metadata (name and type) is created in Repository.`,
 	Run: func(command *cobra.Command, args []string) {
 
 		if relativePath != "" {

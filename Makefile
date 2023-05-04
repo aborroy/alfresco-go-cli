@@ -4,9 +4,9 @@ LINUX=$(EXECUTABLE)_linux_amd64
 DARWIN=$(EXECUTABLE)_darwin_arm64
 VERSION=$(shell git describe --tags --always --long --dirty)
 
-.PHONY: all test clean
+.PHONY: all test clean docs
 
-all: test build
+all: test build docs
 
 build: test windows linux darwin
 	@echo version: $(VERSION)
@@ -28,6 +28,9 @@ $(DARWIN):
 
 test:
 	cd test && ./test_node.sh
+
+docs:
+	go build ./docs/generate/generate.go && cd docs/generate && ./generate
 
 clean:
 	go clean

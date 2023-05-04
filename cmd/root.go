@@ -19,8 +19,10 @@ const (
 
 var cfgFile string
 var RootCmd = &cobra.Command{
-	Use:     "alfresco",
-	Short:   "A Command Line Interface for Alfresco Content Services.",
+	Use:   "alfresco",
+	Short: "A Command Line Interface for Alfresco Content Services",
+	Long: `Alfresco CLI provides access to Alfresco REST API services via command line.
+A running ACS server is required to use this program (commonly available in http://localhost:8080/alfresco).`,
 	Version: "0.0.2",
 }
 

@@ -58,7 +58,9 @@ var folderNameDownload string
 var wgDownload sync.WaitGroup
 var nodeDownloadFolderCmd = &cobra.Command{
 	Use:   "download-folder",
-	Short: "Download Alfresco Repository folder to local folder",
+	Short: "Download an Alfresco Repository folder to a local folder",
+	Long: `Folders and files nodes from the repository are retrieved recursively.
+Only content is downloaded, while metadata is not available on the local download`,
 	Run: func(command *cobra.Command, args []string) {
 
 		log.Println(NodeUploadFolderCmdId,
@@ -83,6 +85,6 @@ func init() {
 	nodeCmd.AddCommand(nodeDownloadFolderCmd)
 	nodeDownloadFolderCmd.Flags().StringVarP(&nodeId, "nodeId", "i", "", "Node Id in Alfresco Repository to download to local folder. You can also use one of these well-known aliases: -my-, -shared-, -root-")
 	nodeDownloadFolderCmd.Flags().StringVarP(&relativePath, "relativePath", "r", "", "A path in Alfresco Repository relative to the nodeId.")
-	nodeDownloadFolderCmd.Flags().StringVarP(&folderNameDownload, "directory", "d", "", "Folder to download Alfresco content")
+	nodeDownloadFolderCmd.Flags().StringVarP(&folderNameDownload, "directory", "d", "", "Local folder path to download Alfresco content")
 	nodeDownloadFolderCmd.MarkFlagRequired("nodeId")
 }

@@ -30,7 +30,9 @@ var relativePath string
 var responseBody bytes.Buffer
 var nodeCmd = &cobra.Command{
 	Use:   "node",
-	Short: "Manage nodes",
+	Short: "Manage nodes in ACS Repository",
+	Long: `ACS Repository handles a set of Nodes of different types (folders, files...)
+This command provides the ability to create, update, retrieve and delete ACS Nodes.`,
 	PersistentPostRun: func(command *cobra.Command, args []string) {
 		var format, _ = command.Flags().GetString("output")
 		output(responseBody.Bytes(), format)

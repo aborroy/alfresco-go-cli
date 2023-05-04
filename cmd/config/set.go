@@ -19,7 +19,11 @@ var insecure bool
 var maxItems int
 var configSetCmd = &cobra.Command{
 	Use:   "set",
-	Short: "Connection details storage",
+	Short: "ACS connection details storage",
+	Long: `ACS Client configuration is stored on a local ".alfresco" file.
+Credentials (username and password) are stored on a Native Store depending on the OS.
+The access to the Native Store may require typing OS credentials.
+When using TLS, "insecure" flag can be set to "true" to allow connections to ACS servers using self-signed certificates.`,
 	Run: func(command *cobra.Command, args []string) {
 		_err := nativestore.Set(server, username, password)
 		if _err != nil {

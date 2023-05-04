@@ -19,3 +19,7 @@
 
 # Go workspace file
 go.work
+
+# Runtime configuration files
+.alfresco
+alfresco.log

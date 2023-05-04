@@ -7,7 +7,10 @@ import (
 
 var ConfigCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Connection details",
+	Short: "Manage ACS connection details",
+	Long: `ACS Client configuration is stored on a local ".alfresco" file.
+Credentials (username and password) are stored on a Native Store depending on the OS.
+The access to the Native Store may require typing OS credentials.`,
 }
 
 func init() {

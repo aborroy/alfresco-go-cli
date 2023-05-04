@@ -171,13 +171,15 @@ a8e32ff6-6140-4a19-84a5-c157820fc376
 
 Sample bash scripts for testing purposes are provided in [test](test) folder.
 
+## Documentation
+
+Detailed documentation is available in [docs/alfresco.md](docs/alfresco.md)
+
 ## TODO
 
-* Automated testing
 * Site commands
 * Person commands
 * Group commands
 * Search commands
 * Provide pre-built programs for Windows, Linux, Mac AMD64 & Mac ARM64
 * Control concurrency rate
-* [Generate documentation automatically](https://github.com/spf13/cobra/blob/main/doc/md_docs.md)

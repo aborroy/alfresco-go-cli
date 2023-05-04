@@ -48,7 +48,11 @@ var skipCount int
 var maxItems int
 var nodeChildrenCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Get children nodes",
+	Short: "Get children nodes from a Node in the repository",
+	Long: `Metadata List for direct children nodes of a Node in the repository.
+Metadata List is provided as output of the command.
+If list elements count is greater than "maxItems" flag, output includes "HasMoreItems" field set to true.
+Incrementing the "skipCount" flag on a loop will allow to retrieve all the children nodes.`,
 	Run: func(command *cobra.Command, args []string) {
 		if maxItems == -1 {
 			maxItems = viper.GetInt(nativestore.MaxItemsLabel)
