@@ -37,7 +37,7 @@ var filePrepender = func(filename string) string {
 
 var linkHandler = func(name string) string {
 
-	var prefix = "/"
+	var prefix = ""
 	level := len(strings.Split(currentFileName, "_"))
 	if level == 3 {
 		return prefix + strings.ToLower(name)

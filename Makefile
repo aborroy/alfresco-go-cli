@@ -30,7 +30,7 @@ test:
 	cd test && ./test_node.sh
 
 docs:
-	go build ./docs/generate/generate.go && cd docs/generate && ./generate
+	cd docs/generate && go build generate.go && ./generate
 
 clean:
 	go clean

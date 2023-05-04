@@ -23,3 +23,6 @@ go.work
 # Runtime configuration files
 .alfresco
 alfresco.log
+
+# Docs generator program
+docs/generate/generate

@@ -1,5 +1,5 @@
 ---
-date: 2023-05-04T12:40:28+02:00
+date: 2023-05-04T12:46:43+02:00
 title: "alfresco config get"
 slug: alfresco_config_get
 ---
@@ -32,5 +32,5 @@ alfresco config get [flags]
 
 ### SEE ALSO
 
-* [alfresco config](/alfresco_config.md)	 - Manage ACS connection details
+* [alfresco config](alfresco_config.md)	 - Manage ACS connection details
 

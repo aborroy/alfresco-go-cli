@@ -1,5 +1,5 @@
 ---
-date: 2023-05-04T12:40:28+02:00
+date: 2023-05-04T12:46:43+02:00
 title: "alfresco node get"
 slug: alfresco_node_get
 ---
@@ -36,5 +36,5 @@ alfresco node get [flags]
 
 ### SEE ALSO
 
-* [alfresco node](/alfresco_node.md)	 - Manage nodes in ACS Repository
+* [alfresco node](alfresco_node.md)	 - Manage nodes in ACS Repository
 
