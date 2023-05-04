@@ -34,6 +34,12 @@ type HttpExecution struct {
 	ResponseBodyOutput io.Writer
 }
 
+var validHttpResponse = map[int]bool{
+	http.StatusOK:        true,
+	http.StatusCreated:   true,
+	http.StatusNoContent: true,
+}
+
 func setBasicAuthHeader(request *http.Request, username, password string) {
 	if cmd.UsernameParam != "" {
 		username = cmd.UsernameParam
@@ -59,12 +65,6 @@ func createHttpClient(tlsEnabled bool, insecureAllowed bool) *http.Client {
 		},
 	}
 	return &client
-}
-
-var validHttpResponse = map[int]bool{
-	http.StatusOK:        true,
-	http.StatusCreated:   true,
-	http.StatusNoContent: true,
 }
 
 func checkStatusResponse(httpStatus int) {
