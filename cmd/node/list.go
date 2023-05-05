@@ -33,7 +33,7 @@ func ListNode(
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Url:                nodeUrlPath + nodeId + "/children",
-		Parameters:         GetUrlParams(params),
+		Parameters:         httpclient.GetUrlParams(params),
 		ResponseBodyOutput: responseBody,
 	}
 

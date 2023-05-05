@@ -1,5 +1,4 @@
 ---
-date: 2023-05-04T12:46:43+02:00
 title: "alfresco"
 slug: alfresco
 ---
@@ -25,4 +24,5 @@ A running ACS server is required to use this program (commonly available in http
 
 * [alfresco config](config/alfresco_config.md)	 - Manage ACS connection details
 * [alfresco node](node/alfresco_node.md)	 - Manage nodes in ACS Repository
+* [alfresco people](people/alfresco_people.md)	 - Manage people in ACS Repository
 

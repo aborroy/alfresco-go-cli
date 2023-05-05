@@ -178,7 +178,6 @@ Detailed documentation is available in [docs/alfresco.md](docs/alfresco.md)
 ## TODO
 
 * Site commands
-* Person commands
 * Group commands
 * Search commands
 * Provide pre-built programs for Windows, Linux, Mac AMD64 & Mac ARM64

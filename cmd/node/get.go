@@ -27,7 +27,7 @@ func GetNodeProperties(
 		Method:             http.MethodGet,
 		Format:             httpclient.None,
 		Url:                nodeUrlPath + nodeId,
-		Parameters:         GetUrlParams(params),
+		Parameters:         httpclient.GetUrlParams(params),
 		ResponseBodyOutput: responseBody,
 	}
 

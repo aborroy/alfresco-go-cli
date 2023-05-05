@@ -16,6 +16,8 @@ function cleanup {
 }
 trap cleanup EXIT
 
+echo "[INTEGRATION TESTS for NODE commands]"
+
 # Start Alfresco
 docker compose up -d
 echo "Starting Alfresco ..."
@@ -95,7 +97,7 @@ set +o errexit
 GET_NEW_NODE_ERROR=$($ALF node get -i $NEW_NODE_ID)
 set -o errexit
 
-if [ "${GET_NEW_NODE_ERROR}" == *"404"* ]; then
+if [[ "${GET_NEW_NODE_ERROR}" != *"404"* ]]; then
   echo "Got $GET_NEW_NODE_ERROR but expecting 404 (Not Found)"
   exit -1
 fi

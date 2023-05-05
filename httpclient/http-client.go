@@ -40,6 +40,14 @@ var validHttpResponse = map[int]bool{
 	http.StatusNoContent: true,
 }
 
+func GetUrlParams(params map[string]string) url.Values {
+	var parameters = url.Values{}
+	for key, value := range params {
+		parameters.Add(key, value)
+	}
+	return parameters
+}
+
 func setBasicAuthHeader(request *http.Request, username, password string) {
 	if cmd.UsernameParam != "" {
 		username = cmd.UsernameParam

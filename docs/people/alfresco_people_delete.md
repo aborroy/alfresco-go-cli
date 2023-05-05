@@ -1,24 +1,24 @@
 ---
-title: "alfresco config get"
-slug: alfresco_config_get
+title: "alfresco people delete"
+slug: alfresco_people_delete
 ---
-## alfresco config get
+## alfresco people delete
 
-Get ACS connection details
+Delete a Person existing in the repository
 
 ### Synopsis
 
-ACS Client configuration and credentials are retrieved.
-The access to the Native Store may require typing OS credentials.
+Removes an existing person from the repository.
 
 ```
-alfresco config get [flags]
+alfresco people delete [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for get
+  -h, --help              help for delete
+  -i, --personId string   Username of the user in Alfresco Repository.
 ```
 
 ### Options inherited from parent commands
@@ -31,5 +31,5 @@ alfresco config get [flags]
 
 ### SEE ALSO
 
-* [alfresco config](alfresco_config.md)	 - Manage ACS connection details
+* [alfresco people](alfresco_people.md)	 - Manage people in ACS Repository
 

@@ -3,19 +3,10 @@ package node
 import (
 	"bytes"
 	"encoding/json"
-	"net/url"
 
 	"github.com/aborroy/alfresco-cli/cmd"
 	"github.com/spf13/cobra"
 )
-
-func GetUrlParams(params map[string]string) url.Values {
-	var parameters = url.Values{}
-	for key, value := range params {
-		parameters.Add(key, value)
-	}
-	return parameters
-}
 
 func GetNodeId(rootNodeId string, relativePath string) string {
 	var responseBodyNodeId bytes.Buffer

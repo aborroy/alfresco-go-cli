@@ -27,7 +27,7 @@ $(DARWIN):
 	env GOOS=darwin GOARCH=arm64 go build -v -o $(DARWIN) -ldflags="-s -w -X main.version=$(VERSION)"  ./alfresco.go
 
 test:
-	cd test && ./test_node.sh
+	cd test && ./test_node.sh && ./test_people.sh
 
 docs:
 	cd docs/generate && go build generate.go && ./generate

@@ -1,5 +1,4 @@
 ---
-date: 2023-05-04T12:46:43+02:00
 title: "alfresco node download-folder"
 slug: alfresco_node_download-folder
 ---

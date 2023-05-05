@@ -10,16 +10,15 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/aborroy/alfresco-cli/cmd"
 	_ "github.com/aborroy/alfresco-cli/cmd/config"
 	_ "github.com/aborroy/alfresco-cli/cmd/node"
+	_ "github.com/aborroy/alfresco-cli/cmd/people"
 	"github.com/spf13/cobra/doc"
 )
 
 const fmTemplate = `---
-date: %s
 title: "%s"
 slug: %s
 ---
@@ -28,11 +27,10 @@ slug: %s
 var currentFileName string
 
 var filePrepender = func(filename string) string {
-	now := time.Now().Format(time.RFC3339)
 	name := filepath.Base(filename)
 	base := strings.TrimSuffix(name, path.Ext(name))
 	currentFileName = filename
-	return fmt.Sprintf(fmTemplate, now, strings.Replace(base, "_", " ", -1), base)
+	return fmt.Sprintf(fmTemplate, strings.Replace(base, "_", " ", -1), base)
 }
 
 var linkHandler = func(name string) string {
