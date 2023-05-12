@@ -41,7 +41,7 @@ Add only properties that require modification.`,
 		}
 	},
 	PostRun: func(command *cobra.Command, args []string) {
-		log.Println(CreatePeopleCmdId, "Person "+personId+" has been created")
+		log.Println(CreatePeopleCmdId, "Person "+personId+" has been updated")
 	},
 }
 

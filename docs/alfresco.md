@@ -23,6 +23,7 @@ A running ACS server is required to use this program (commonly available in http
 ### SEE ALSO
 
 * [alfresco config](config/alfresco_config.md)	 - Manage ACS connection details
+* [alfresco group](group/alfresco_group.md)	 - Manage groups in ACS Repository
 * [alfresco node](node/alfresco_node.md)	 - Manage nodes in ACS Repository
 * [alfresco people](people/alfresco_people.md)	 - Manage people in ACS Repository
 

@@ -56,6 +56,14 @@ if [[ "$ALFRESCO_USER_NAME" != "Hyland" ]]; then
   exit -1
 fi
 
+# Get groups from user "alfresco"
+ALFRESCO_USER_GROUPS_COUNT=$($ALF people group -i alfresco -o id | wc -l | xargs)
+
+if [[ "$ALFRESCO_USER_GROUPS_COUNT" != "1" ]]; then
+  echo "Got $ALFRESCO_USER_GROUPS_COUNT but expecting 1"
+  exit -1
+fi
+
 # Remove user "alfresco"
 $ALF people delete -i $ALFRESCO_USER_ID
 echo "Person $ALFRESCO_USER_ID has been deleted"

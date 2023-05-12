@@ -30,6 +30,7 @@ ACS Repository handles a set of Persons that may be associated to groups, permis
 * [alfresco people create](alfresco_people_create.md)	 - Create new Person in ACS Repository
 * [alfresco people delete](alfresco_people_delete.md)	 - Delete a Person existing in the repository
 * [alfresco people get](alfresco_people_get.md)	 - Get Person information from repository
+* [alfresco people group](alfresco_people_group.md)	 - Get Group list for a person in repository
 * [alfresco people list](alfresco_people_list.md)	 - Get Person list from repository
 * [alfresco people update](alfresco_people_update.md)	 - Update Person properties in ACS Repository
 

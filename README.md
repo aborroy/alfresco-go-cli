@@ -11,16 +11,19 @@ Using `-h` flag provides detail on the use of the different commands available:
 
 ```
 $ ./alfresco -h
-A Command Line Interface for Alfresco Content Services.
+Alfresco CLI provides access to Alfresco REST API services via command line.
+A running ACS server is required to use this program (commonly available in http://localhost:8080/alfresco).
 
 Usage:
   alfresco [command]
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
-  config      Connection details
+  config      Manage ACS connection details
+  group       Manage groups in ACS Repository
   help        Help about any command
-  node        Manage nodes
+  node        Manage nodes in ACS Repository
+  people      Manage people in ACS Repository
 
 Flags:
   -h, --help              help for alfresco
@@ -77,32 +80,6 @@ $ tail -f alfresco.log
 2023/04/28 10:12:48 [NODE UPLOAD FOLDER] Uploading local folder ../tmp to Alfresco Repository folder 72d25c97-4ab9-47ff-8b70-b67c5f4939e8
 2023/04/28 10:12:56 [NODE UPLOAD FOLDER] Folder ../tmp has been uploaded
 2023/04/28 10:12:56 ERROR [NODE CREATE] Post "http://localhost:8080/alfresco/api/-default-/public/alfresco/versions/1/nodes/4960a8a5-a258-4fed-84b4-73ae8cf9b2de/children": EOF
-```
-
-## Commands
-
-**Node**
-
-The `node` command provides access to Node handling in Alfresco Repository.
-
-```
-./alfresco node -h
-Manage nodes
-
-Usage:
-  alfresco node [command]
-
-Available Commands:
-  create          Create new Node
-  delete          Delete Node
-  download-folder Download Alfresco Repository folder to local folder
-  get             Get Node information (properties and content)
-  list            Get children nodes
-  update          Update Node information
-  upload-folder   Upload local folder to Alfresco Repository
-
-Flags:
-  -i, --nodeId string   Node Id in Alfresco Repository
 ```
 
 ## Generic flags
@@ -173,12 +150,11 @@ Sample bash scripts for testing purposes are provided in [test](test) folder.
 
 ## Documentation
 
-Detailed documentation is available in [docs/alfresco.md](docs/alfresco.md)
+Detailed documentation for available commands in [docs/alfresco.md](docs/alfresco.md)
 
 ## TODO
 
 * Site commands
-* Group commands
 * Search commands
 * Provide pre-built programs for Windows, Linux, Mac AMD64 & Mac ARM64
 * Control concurrency rate

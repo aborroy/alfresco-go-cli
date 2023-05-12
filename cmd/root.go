@@ -23,7 +23,7 @@ var RootCmd = &cobra.Command{
 	Short: "A Command Line Interface for Alfresco Content Services",
 	Long: `Alfresco CLI provides access to Alfresco REST API services via command line.
 A running ACS server is required to use this program (commonly available in http://localhost:8080/alfresco).`,
-	Version: "0.0.3",
+	Version: "0.0.4",
 }
 
 var UsernameParam string
